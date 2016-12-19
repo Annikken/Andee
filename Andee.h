@@ -283,7 +283,7 @@ extern "C" {
      **************       TYPE MACROS      ***********************
      ************************************************************/
 #define DATA_OUT 'C'
-#define DATA_OUT_TEXT 'H'
+#define DATA_OUT_HEADER 'H'
 #define DATA_OUT_CIRCLE 'G'
 #define ANALOG_DIAL_OUT 'R'
 #define BUTTON_IN 'B'
@@ -543,9 +543,6 @@ extern "C" {
 #define ALPHA_NUMERIC_PW '1'
 #define NUMERIC '2'
 #define NUMERIC_PW '3'
-
-
-
 
     /*************************************************************
      **************     iOS Text To Speech           *************
