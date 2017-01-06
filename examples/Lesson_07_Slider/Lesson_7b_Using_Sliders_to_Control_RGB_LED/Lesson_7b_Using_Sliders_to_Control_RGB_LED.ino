@@ -65,7 +65,7 @@ void setInitialData()
   displayCurrentColour.setTitle("Current Colour");
   displayCurrentColour.setTitleColor("00000000");  
   displayCurrentColour.setTitleTextColor("FF000000");  
-  displayCurrentColour.setColor("FFFFFFFF");
+  displayCurrentColour.setBaseColor("FFFFFFFF");
   displayCurrentColour.setTextColor("FF000000");
   displayCurrentColour.setData(colour); // Show the RGB colour code.
   displayCurrentColour.setUnit("Values are in hexadecimal format");
@@ -79,8 +79,8 @@ void setInitialData()
   redSlider.setSliderInitialValue(r);  
   redSlider.setSliderNumIntervals(256); // Set as discrete slider
   redSlider.setSliderReportMode(ON_FINGER_UP); // Update values as you're moving
-  redSlider.setSliderColor(THEME_RED); // Slider bar colour
-  redSlider.setColor(THEME_RED_DARK); // Slider background colour  
+  redSlider.setActiveColor(THEME_RED); // Slider Active and Font colour
+  redSlider.setBaseColor(THEME_RED_DARK); // Slider Base colour  
   
   // Draw green slider
   greenSlider.setId(2);  
@@ -91,8 +91,8 @@ void setInitialData()
   greenSlider.setSliderInitialValue(g);  
   greenSlider.setSliderNumIntervals(256); // Set as discrete slider
   greenSlider.setSliderReportMode(ON_FINGER_UP); // Update values as you're moving
-  greenSlider.setSliderColor(THEME_GREEN); // Slider bar colour
-  greenSlider.setColor(THEME_GREEN_DARK); // Slider background colour  
+  greenSlider.setActiveColor(THEME_GREEN); // Slider Active and Font colour
+  greenSlider.setBaseColor(THEME_GREEN_DARK); // Slider Base colour  
 
   // Draw blue slider
   blueSlider.setId(3);  
@@ -103,8 +103,8 @@ void setInitialData()
   blueSlider.setSliderInitialValue(b);  
   blueSlider.setSliderNumIntervals(256); // Set as discrete slider
   blueSlider.setSliderReportMode(ON_FINGER_UP); // Update values as you're moving
-  blueSlider.setSliderColor(THEME_BLUE); // Slider bar colour
-  blueSlider.setColor(THEME_BLUE_DARK); // Slider background colour    
+  blueSlider.setActiveColor(THEME_BLUE); // Slider Active and Font colour
+  blueSlider.setBaseColor(THEME_BLUE_DARK); // Slider Base colour   
   }
 
 // Arduino will run instructions here repeatedly until you power it off.
@@ -126,7 +126,7 @@ void loop()
   }
   
   displayCurrentColour.setData(colour); // Show user the ARGB colour code on the smartphone
-  displayCurrentColour.setColor(colour); // Show the actual color on screen
+  displayCurrentColour.setBaseColor(colour); // Show the actual color on screen
   displayCurrentColour.update(); // Update screen
   redSlider.update();
   greenSlider.update();

@@ -56,8 +56,8 @@ void setInitialData()
   analogDial.setTitle("Analog dial");
   
   //These functions set different colors to the dial
-  analogDial.setMainColor(LIME_GREEN); 
-  analogDial.setSubColor(GREEN);
+  analogDial.setBaseColor(LIME_GREEN);//Set the base color
+  analogDial.setActiveColor(GREEN);//Set both the moving dial and font color
   analogDial.setData(0);  
 }
 

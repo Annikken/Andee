@@ -78,8 +78,8 @@ void setInitialData()
   // - ON_VALUE_CHANGE : Updates Arduino everytime your finger moves the slider
   // - ON_FINGER_UP    : Updates Arduino only after you lift up your finger from the slider
   
-  sliderDiscrete.setSliderColor(THEME_GREY_DARK); // Slider bar colour
-  sliderDiscrete.setColor(THEME_GREY); // Slider background colour
+  sliderDiscrete.setActiveColor(RED); // set the Slider active color and font color
+  sliderDiscrete.setBaseColor(DARK_RED); // Slider base colour
   
   // Let's draw a continuous slider! ///////////////////////////////////////
   sliderContinuous.setId(1);
@@ -90,15 +90,15 @@ void setInitialData()
   sliderContinuous.setSliderInitialValue(sliderPosB);  // Set slider position to 50
   sliderContinuous.setSliderNumIntervals(0); // Set to 0 for continuous slider
   sliderContinuous.setSliderReportMode(ON_FINGER_UP);
-  sliderContinuous.setSliderColor(THEME_MIDNIGHT_DARK);
-  sliderContinuous.setColor(THEME_MIDNIGHT);
+  sliderContinuous.setActiveColor(BLUE);
+  sliderContinuous.setBaseColor(DARK_BLUE);
   
   // Button to reset slider positions 
   buttonResetPosition.setId(2); // Don't forget to assign a unique ID number
   buttonResetPosition.setType(BUTTON_IN); // Defines object as a button
   buttonResetPosition.setLocation(2,0,FULL);
   buttonResetPosition.setTitle("Reset Position");
-  buttonResetPosition.setColor(THEME_TURQUOISE);
+  buttonResetPosition.setBaseColor(THEME_TURQUOISE);
   buttonResetPosition.setTitleColor(THEME_TURQUOISE_DARK);  
   
   // You can also use sliders to display output ////////////////////////////
@@ -132,18 +132,18 @@ void loop()
   
   if(sliderTotal >= 300) // You can even get it to update its colour
   {
-    sliderDisplay.setSliderColor(THEME_GREEN_DARK);
-    sliderDisplay.setColor(THEME_GREEN);    
+    sliderDisplay.setActiveColor(THEME_GREEN_DARK);
+    sliderDisplay.setBaseColor(THEME_GREEN);    
   }
   else if(sliderTotal < 100)
   {
-    sliderDisplay.setSliderColor(THEME_RED_DARK);
-    sliderDisplay.setColor(THEME_RED);      
+    sliderDisplay.setActiveColor(THEME_RED_DARK);
+    sliderDisplay.setBaseColor(THEME_RED);      
   }
   else if(sliderTotal < 300)
   {
-    sliderDisplay.setSliderColor(THEME_ORANGE_DARK);
-    sliderDisplay.setColor(THEME_ORANGE);
+    sliderDisplay.setActiveColor(THEME_PURPLE_DARK);
+    sliderDisplay.setBaseColor(THEME_PURPLE);
   }   
   
   sliderDisplay.update();

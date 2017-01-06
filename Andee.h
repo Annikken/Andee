@@ -240,12 +240,10 @@ extern "C" {
 #define setDefaultValue setSliderNumIntervals
 #define setInputType setSliderReportMode
 #define setMinMax setSliderMinMax
-#define setSubColor setColor
-#define setMainColor setTitleColor
-#define setDataUnitColor setTextColor
-#define setSliderLeftColor setTitleColor
-#define setSliderRightColor setColor
-#define setSliderFontColor setTitleTextColor
+
+#define setBaseColor setColor
+#define setActiveColor setTitleColor
+
 #define Helper AndeeHelper
 #define BOOL bool
 #define C_HLIMIT 999
