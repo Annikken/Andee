@@ -2,18 +2,19 @@
   [Annikken Andee]
   ================
   Christmas Lights and Annoying Music
-  by Jonathan Sim <jonathan@annikken.com>
 
   Here is a simple project to put you in a Christmas mood!
   It will play some Christmas songs and flash LEDs.
   Feel free to play around and add more complicated patterns
-  and melodies!
- 
-  For video instructions on how to assemble this, 
-  please visit http://resources.annikken.com
+  and melodies! 
   
-  Check out our Blog for regular updates and fun!
-  http://annikken.com/blog
+  Check out our Resources section for more information and 
+  ideas on what you can do with the Annikken Andee!
+  http://resources.annikken.com
+
+  Contact us at andee@annikken.com if there are 
+  bugs in this sketch or if you need help with the 
+  Annikken Andee
 ************************************************************/
 
 #include <Andee.h>

@@ -10,15 +10,15 @@
  Because Apple Watch do not allow dynamically creation of UI, 
  we need to use an Existing UI template and modified it
 
- by Robin Ha <robin@annikken.com>
-
- Check out our Resources section for more information and
+ 
+ Check out our Resources section for more information and 
  ideas on what you can do with the Annikken Andee!
  http://resources.annikken.com
-
- Check out our Blog for regular updates and fun!
- http://annikken.com/blog
- ************************************************************/
+  
+ Contact us at andee@annikken.com if there are 
+ bugs in this sketch or if you need help with the 
+ Annikken Andee
+************************************************************/
 
 #include <SPI.h>
 #include <Andee.h>

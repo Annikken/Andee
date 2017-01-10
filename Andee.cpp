@@ -318,7 +318,7 @@ bool mIsCorrectId(char* address, char id){
 
 BOOL mTextAndee2(char link, char id, char* cmd, char* buffer){
     
-    
+    delay(50);
     int i;
     char rData;
     char len;

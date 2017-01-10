@@ -2,7 +2,6 @@
   [Annikken Andee]
   ================
   Rubber Band Launcher
-  by Jonathan Sim <jonathan@annikken.com>
 
   The Rubber Band Launcher makes use of 3x servos. One 
   controls the firing and reload mechanism, while the other 
@@ -15,10 +14,15 @@
   plastic soda bottle and tape that to a base. The mouth piece 
   is just the  right size to hold the base servo in place.
  
-  Try it! It'll be lots of fun!
+  Try it! It'll be lots of fun!  
   
-  Check out our Blog for regular updates and fun!
-  http://annikken.com/blog
+  Check out our Resources section for more information and 
+  ideas on what you can do with the Annikken Andee!
+  http://resources.annikken.com
+
+  Contact us at andee@annikken.com if there are 
+  bugs in this sketch or if you need help with the 
+  Annikken Andee
 ************************************************************/
 
 #include <SPI.h>
