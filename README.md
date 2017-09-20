@@ -3,7 +3,7 @@ Annikken Andee is a Bluetooth Shield that enables Arduino users to create custom
 This shield currently works on the Arduino Uno, Leonardo, Mega, Due.
 
 ## Installation
-1) Download the [latest version](https://github.com/rafaelnsantos/Relay/archive/master.zip)
+1) Download the [latest version](https://github.com/Annikken/Andee/archive/master.zip)
 2) Load the `.zip` with **Sketch → Include Library → Add .ZIP Library**
 
 ## API 
