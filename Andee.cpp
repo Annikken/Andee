@@ -3,7 +3,6 @@
 // Copyright (c) 2016 Annikken Pte Ltd.  All right reserved.
 // Author: Muhammad Hasif
 // Version: 31.1
-// Dated: 22 Nov 16
 
 #if (ARDUINO >= 100)
 #include <Arduino.h>
@@ -17,7 +16,7 @@
 #define INCOMING_BUF_SIZE 20
 #define FBUF_SIZE 15
 #define INT_CHAR_BUF_SIZE 8
-#define LONG_CHAR_BUF_SIZE 11
+#define LONG_CHAR_BUF_SIZE 32
 
 bool debug = false;
 //Set this to true if you want to see certain debug print
@@ -647,7 +646,7 @@ void AndeeClass::begin(){
 #else
 void AndeeClass::begin(){
     int i;
-    int timeout = 50*8;
+    int timeout = 50*8;	
     
     pinMode(_cs, OUTPUT);
     pinMode(11, OUTPUT);
@@ -2557,7 +2556,7 @@ void AndeeHelper::getGravReading(float* x, float* y, float* z){
     for(i=0; i<timeout; i++){
         if(mGetLongMessagesFromAndee(_longCharBuf)){
             
-            if(_isCorrectId(_incomingBuffer)){
+            if(_isCorrectId(_incomingBuffer)){				
 				
 				*x = strtod (_longCharBuf, &pEnd);
 				*y = strtod (pEnd, &pEnd);

@@ -243,6 +243,8 @@ extern "C" {
 
 #define setBaseColor setColor
 #define setActiveColor setTitleColor
+#define setMainColor setColor
+#define setSubColor setTitleColor
 
 #define Helper AndeeHelper
 #define BOOL bool
