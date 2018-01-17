@@ -25,7 +25,6 @@
 
 // Apple Watch UI
 AndeeHelper WatchTitle; // This will be used to set the Title on the Watch UI
-AndeeHelper WatchBack;  // This will be used to set the behavioir of the watch "Back button"
 AndeeHelper WatchButton1; // This will be used to set the attribute and behavior the Button on the Watch UI
 
 // iPhone UI
@@ -57,7 +56,7 @@ void loop()
     // Program State == 0
     // Create a Button on the PHONE
     // UI on the Apple watch will only be create when this button is pressed
-    if (EnableWatch.isPressed() == true) {
+    if (EnableWatch.isPressed()) {
       EnableWatch.ack();
       state = 1; // Change Program State to 1
       spamupdate = true;
@@ -89,25 +88,24 @@ void loop()
       Andee.changeScreen(WATCH_1BUTTON_A); 
       delay(100);
       WatchTitle.update(); //Set the Title Text
-      //WatchBack.update();  //Set the Back Button (Not in use)
       WatchButton1.update(); //Set the Button 1 Text and Color
       delay(100);
       Andee.showScreen(); // Show the UI on your Apple Watch
 
     }
 
-    if (WatchButton1.isPressed() == true) {// Button on Watch is Pressed
+    if (WatchButton1.isPressed()) {// Button on Watch is Pressed
       WatchButton1.ack();
       WatchButtonState = !WatchButtonState; // Toggle State
 
       if (WatchButtonState == true) {
-        WatchButton1.setWatchTitle("Turn OFF");
-        WatchButton1.setWatchTitleColor("FFFF0000");
+        WatchButton1.setWatchText("Turn OFF");
+        WatchButton1.setWatchColor("FFFF0000");
         digitalWrite(13, HIGH);// Turn On LED
       }
       else if (WatchButtonState == false) {
-        WatchButton1.setWatchTitle("Turn ON");
-        WatchButton1.setWatchTitleColor("FF7959FF");
+        WatchButton1.setWatchText("Turn ON");
+        WatchButton1.setWatchColor("FF00FF00");
         digitalWrite(13, LOW);//Turn OFf LED
       }
       WatchButton1.update(); // Button1 Text and Color Change
@@ -126,14 +124,7 @@ void setup_AndeeWatch()
   // do not set your own arbitrary Id value 
   WatchTitle.setId(WATCH_TITLE); 
   WatchTitle.setType(WATCH); // For Watch UI
-  WatchTitle.setWatchTitle("Single Button"); // Change the Title text to "Single Button"
-
-
-  // This Andee Helper is for the Back Button
-  // do not set your own arbitrary Id value
-  // Not being used in this Lesson
-  WatchBack.setId(WATCH_BUTTON0);
-  WatchBack.setType(WATCH);
+  WatchTitle.setWatchText("Single Button"); // Change the Title text to "Single Button"
   
   // This Andee Helper is for the Button
   // do not set your own arbitrary Id value
@@ -141,8 +132,8 @@ void setup_AndeeWatch()
   WatchButton1.setType(WATCH);
 
   // Set the Button Text as "Turn On" and Color to AARRGGBB "FF7959FF"
-  WatchButton1.setWatchTitle("Turn ON");
-  WatchButton1.setWatchTitleColor("FF7959FF");
+  WatchButton1.setWatchText("Turn ON");
+  WatchButton1.setWatchColor("FF00FF00");
 }
 
 void setup_AndeePhone()

@@ -35,6 +35,7 @@ const int servoPin = 2; // Servo connected to pin 2
 void setup()
 {
   Andee.begin();  // Setup communication between Annikken Andee and Arduino
+  Andee.setName("Servo Demo");//Set the name of the Andee. This name will appear in the app
   Andee.clear();  // Clear the screen of any previous displays
   currentPosition = 0; // Initialise position to 0
   theServo.attach(servoPin); // Tell Arduino which pin the servo is connected to
@@ -60,20 +61,22 @@ void setInitialData()
   sliderPosition.setSliderMinMax(0, 180);
   sliderPosition.setSliderInitialValue(currentPosition);  
   sliderPosition.setSliderNumIntervals(181); // Set as discrete slider
-  sliderPosition.setSliderReportMode(ON_VALUE_CHANGE); // Update values as you're moving 
+  sliderPosition.setSliderReportMode(ON_FINGER_UP); // Update values as you're moving 
 }
 
 // Arduino will run instructions here repeatedly until you power it off.
 void loop()
 {
-  currentPosition = sliderPosition.getSliderValue(INT); // Use INT to retrieve integer value
-  theServo.write(currentPosition);
-  displaybox.setData(currentPosition);
+  if(sliderPosition.getSliderValue(&currentPosition,INT))// Use INT to retrieve integer value
+  {
+    theServo.write(currentPosition);
+    displaybox.setData(currentPosition);
+  }
 
   displaybox.update();
   sliderPosition.update();
   
-  delay(100); // Always leave a short delay for Bluetooth communication
+  delay(500); // Always leave a short delay for Bluetooth communication
   // Do not use a delay less than 100. Arduino's built-in servo library 
   // isn't well-designed and will cause the Arduino to crash.
 }

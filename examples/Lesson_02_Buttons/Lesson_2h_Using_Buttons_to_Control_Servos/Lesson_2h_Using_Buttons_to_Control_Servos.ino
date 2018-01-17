@@ -41,6 +41,7 @@ const int servoPin = 2; // Servo connected to pin 2
 void setup()
 {
   Andee.begin();  // Setup communication between Annikken Andee and Arduino
+  Andee.setName("Servo Demo");//Set the name of the Andee. This name will appear in the app
   Andee.clear();  // Clear the screen of any previous displays
   currentPosition = 0; // Initialise position to 0
   theServo.attach(servoPin); // Tell Arduino which pin the servo is connected to
@@ -68,7 +69,7 @@ void setInitialData()
   btnCustomPosition.setType(KEYBOARD_IN); // Sets object as a text input button
   btnCustomPosition.setLocation(1,0,FULL);
   btnCustomPosition.setTitle("Quickly Go to Custom Position (0 - 180)");
-  btnCustomPosition.setKeyboardType(ANDEE_NUMERIC_A); 
+  btnCustomPosition.setKeyboardType(ALPHA_NUMERIC); 
 
   displaybox.setId(3);
   displaybox.setType(DATA_OUT); // Sets object as a text input button
@@ -98,7 +99,7 @@ void loop()
     displaybox.setData(currentPosition); // Update new position
   }
   
-  if( btnTurnLeft.getButtonPressCount() > 0 ) // As long as left button is pressed
+  if( btnTurnLeft.isPressed() > 0 ) // As long as left button is pressed
   {
     btnTurnLeft.ack(); // Acknowledge button press or else phone will be left waiting
     newPosition = currentPosition - turnResolution; // Set new position
@@ -116,7 +117,7 @@ void loop()
     }
   }  
   
-  if( btnTurnRight.getButtonPressCount() > 0 ) // As long as right button is pressed
+  if( btnTurnRight.isPressed() > 0 ) // As long as right button is pressed
   {
     btnTurnRight.ack(); // Acknowledge button press or else phone will be left waiting
     newPosition = currentPosition + turnResolution; // Set new position

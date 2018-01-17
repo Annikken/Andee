@@ -16,11 +16,6 @@
 #include <SPI.h>
 #include <Andee.h>
 
-// This is where you change your device name:
-char newBluetoothName[] = "Andee Count Down/Up Timer"; // New device name
-char cmdReply[64]; // String buffer
-char commandString[100]; // String to store the new device name and device command into one
-
 AndeeHelper timeDisplay;
 AndeeHelper minPlus;
 AndeeHelper minMinus;
@@ -33,11 +28,8 @@ AndeeHelper modeButton;
 void setup() {
   // put your setup code here, to run once:
   Andee.begin();  // Setup communication between Annikken Andee and Arduino
+  Andee.setName("Count Up/Down Timer");//Set the name of the Andee. This name will appear in the app
   Andee.clear();  // Clear the screen of any previous displays
-  // We need to combine the new device name with the device command
-  sprintf(commandString, "SET BT NAME %s", newBluetoothName);
-  // Send command to change device name
-  Andee.sendCommand(commandString, cmdReply);
   setInitialData();
 }
 
@@ -128,7 +120,7 @@ const int CountUP = 1;
 
 void loop() {
 
-  intermediate = Andee.isConnected(200);//check to see if Andee is connected with timeout of 200
+  intermediate = Andee.isConnected();//check to see if Andee is connected with timeout of 200
   if(intermediate == 0)//if Andee does not seem to be connected
   {
     disconnectCounter++;//add a counter. We will check if Andee is connected again to be sure it is not disconnected temporarily

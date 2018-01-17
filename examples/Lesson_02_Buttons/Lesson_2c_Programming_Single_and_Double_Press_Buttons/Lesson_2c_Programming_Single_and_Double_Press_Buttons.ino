@@ -32,6 +32,7 @@ AndeeHelper button;
 void setup()
 {
   Andee.begin();  // Setup communication between Annikken Andee and Arduino
+  Andee.setName("MultiplePress Demo");//Set the name of the Andee. This name will appear in the app
   Andee.clear();  // Clear the screen of any previous displays
   setInitialData(); // Define object types and their appearance
 }
@@ -57,12 +58,11 @@ void setInitialData()
 
 // Arduino will run instructions here repeatedly until you power it off.
 void loop()
-{
-  // Get the number of button presses
-  int numPresses = button.getButtonPressCount();
+{  
+  int buttonPressed = button.isPressed();//isPressed() can also return the number of times the button is pressed
   
   // Here's how you code with a multi-press button:
-  if( numPresses == 1 )
+  if( buttonPressed == 1 )
   {
     // Add single press action here!
     displaybox.setData("Single Press");
@@ -71,7 +71,7 @@ void loop()
     displaybox.setData("Waiting for button press");
     displaybox.update();
   }
-  if( numPresses == 2 )
+  else if( buttonPressed > 1 )
   {
     // Add double press action here!
     displaybox.setData("Double Press");

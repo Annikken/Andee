@@ -30,6 +30,7 @@ char tempString[20]; // Used to store date as a string
 void setup()
 {
   Andee.begin();  // Setup communication between Annikken Andee and Arduino
+  Andee.setName("TimeInput Demo");//Set the name of the Andee. This name will appear in the app
   Andee.clear();  // Clear the screen of any previous displays
   setInitialData(); // Define object types and their appearance
 }
@@ -51,7 +52,7 @@ void setInitialData()
   
   // Optional Setting. When the user opens up the time picker, Andee will display this
   // time as the initial time to choose.
-  timeInputButton.setDefaultTime(23, 59, 59); // Format: hour, minute, second
+  timeInputButton.setDefaultTime(23, 59, 00); // Format: hour, minute, second
 }
 
 // Arduino will run instructions here repeatedly until you power it off.

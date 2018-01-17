@@ -41,6 +41,7 @@ int state; // Variable to check whether the state of the toggle button
 void setup()
 {
   Andee.begin();  // Setup communication between Annikken Andee and Arduino
+  Andee.setName("Buzzer Demo");//Set the name of the Andee. This name will appear in the app
   Andee.clear();  // Clear the screen of any previous displays
   setInitialData(); // Define object types and their appearance
   

@@ -30,6 +30,7 @@ AndeeHelper objectB;
 void setup()
 {
   Andee.begin();  // Setup communication between Annikken Andee and Arduino
+  Andee.setName("Display Demo");//Set the name of the Andee. This name will appear in the app
   Andee.clear();  // Clear the screen of any previous displays
   setInitialData(); // Define object types and their appearance
 }
@@ -45,8 +46,7 @@ void setInitialData()
   objectA.setLocation(0, 0, FULL); // Sets the location and size of your object
   /* setLocation (row, col, size)
      Row: From 0 (top-most) to 3
-     Col: From 0 (left-most) to 9. If there are too many objects on that row, you can
-          scroll from left to right.
+     Col: From 0 (left-most) to 3. There is no more scrolling
      Size: The following sizes are available for you to chooose:
      FULL, HALF, ONE_THIRD, ONE_QUART, TWO_THIRD, THREE_QUART */
   objectA.setTitle("This goes to the title bar");

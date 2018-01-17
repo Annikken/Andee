@@ -42,6 +42,7 @@ LiquidCrystal lcd(2, 3, 4, 5, 6, 7);
 void setup()
 {
   Andee.begin();  // Setup communication between Annikken Andee and Arduino
+  Andee.setName("LCD Demo");//Set the name of the Andee. This name will appear in the app
   Andee.clear();  // Clear the screen of any previous displays
   
   // Tell Arduino how many rows and characters are available in the LCD Display

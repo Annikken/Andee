@@ -32,6 +32,7 @@ bool runOnce; // Flag to initiate certain actions to run only once
 void setup()
 {
   Andee.begin();  // Setup communication between Annikken Andee and Arduino
+  Andee.setName("Connected Demo");//Set the name of the Andee. This name will appear in the app
   Andee.clear();  // Clear the screen of any previous displays
   setInitialData(); // Define object types and their appearance
   
@@ -67,9 +68,9 @@ void loop()
     for(int i = 0; i < 10; i++)
     {
       digitalWrite(outputPin, HIGH);
-      delay(100);
+      delay(300);
       digitalWrite(outputPin, LOW);
-      delay(1000);
+      delay(300);
     }
     
     runOnce = false;

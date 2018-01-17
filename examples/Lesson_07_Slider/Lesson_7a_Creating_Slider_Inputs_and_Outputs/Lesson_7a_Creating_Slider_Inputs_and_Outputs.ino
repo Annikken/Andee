@@ -39,35 +39,33 @@ float sliderTotal;
 // only when it starts up.
 void setup()
 {
-  Andee.begin();  // Setup communication between Annikken Andee and Arduino
-  Andee.clear();  // Clear the screen of any previous displays
-
   sliderPosA = 128; // Just some arbitary values for demo purposes
   sliderPosB = 50.0;
-  sliderTotal = sliderPosA + sliderPosB;
-  
+  Andee.begin();  // Setup communication between Annikken Andee and Arduino
+  Andee.clear();  // Clear the screen of any previous displays
+  Andee.setName("Slider Demo");    
   setInitialData(); // Define object types and their appearance
 }
 
-// This is the function meant to define the types and the apperance of
+// This is the function meant to define the types and the appearance of
 // all the objects on your smartphone
 void setInitialData()
 {  
   // Let's draw a discrete slider! ///////////////////////////////////////
-  sliderDiscrete.setId(0);  
+  sliderDiscrete.setId(0);
   sliderDiscrete.setType(SLIDER_IN); // Set object as a slider
   sliderDiscrete.setLocation(0, 0, FULL); // Sliders can only be full size
   sliderDiscrete.setTitle("Discrete Slider");
   
   // Slider settings:
-  sliderDiscrete.setSliderMinMax(0, 255, 0);
+  sliderDiscrete.setSliderMinMax(0, 200);
   // - setSliderMinMax(minimumValue, maximumValue, numberOfDecimalPlaces)
   // Set numberOfDecimalPlaces to 0 for integer values only.
  
   sliderDiscrete.setSliderInitialValue(sliderPosA);
   // Set slider to position 128
   
-  sliderDiscrete.setSliderNumIntervals(256);
+  sliderDiscrete.setSliderNumIntervals(200);
   // Set number of intervals in your slider.
   // Set 0 for continuous slider.
   // Set any number greater than 0 for discrete slider
@@ -106,31 +104,29 @@ void setInitialData()
   sliderDisplay.setType(SLIDER_IN);
   sliderDisplay.setLocation(3,0,FULL);
   sliderDisplay.setTitle("Sum of the Two Sliders");
-  sliderDisplay.setSliderMinMax(0, 355, 2); // Display 2 decimal places
-  sliderDisplay.setSliderInitialValue(sliderTotal);  // Set slider position to 178
+  sliderDisplay.setSliderMinMax(0, 300, 2); // Display 2 decimal places
+  sliderDisplay.setSliderInitialValue(150);  // Set slider position to 178
   sliderDisplay.setSliderNumIntervals(0); // Set to 0 for continuous slider
 }
 
 // Arduino will run instructions here repeatedly until you power it off.
 void loop()
-{
-  if( buttonResetPosition.isPressed() )
+{ 
+  if(sliderDiscrete.getSliderValue(&sliderPosA,INT))//only update sliderTotal if there is new data at getSliderValue
   {
-    buttonResetPosition.ack();
-    sliderDiscrete.moveSliderToValue(128);
-    sliderContinuous.moveSliderToValue(50);
+    sliderTotal = (float)(sliderPosA) + sliderPosB;
   }
-
-  sliderPosA = sliderDiscrete.getSliderValue(INT); // Retrieve integer value
-  sliderPosB = sliderContinuous.getSliderValue(FLOAT); // Retrieve float value
-
-  sliderTotal = (float)(sliderPosA) + sliderPosB;
   
-  // This is how you update the slider as an output display:
-  sliderDisplay.moveSliderToValue(sliderTotal, 2);
-  // Add the 2  to tell Arduino to slide to a float value.
+  if(sliderContinuous.getSliderValue(&sliderPosB,FLOAT))//only update sliderTotal if there is new data at getSliderValue
+  {
+    sliderTotal = (float)(sliderPosA) + sliderPosB;
+  } 
+
+  sliderDisplay.moveSliderToValue(sliderTotal,2);//2 represents the number of decimal place needed
+  sliderDisplay.update();
+  delay(300);//The delays can be split for better efficiency
   
-  if(sliderTotal >= 300) // You can even get it to update its colour
+  if(sliderTotal >= 200) // You can even get it to update its colour
   {
     sliderDisplay.setActiveColor(THEME_GREEN_DARK);
     sliderDisplay.setBaseColor(THEME_GREEN);    
@@ -140,16 +136,22 @@ void loop()
     sliderDisplay.setActiveColor(THEME_RED_DARK);
     sliderDisplay.setBaseColor(THEME_RED);      
   }
-  else if(sliderTotal < 300)
+  else if(sliderTotal < 200 && sliderTotal >= 100)
   {
     sliderDisplay.setActiveColor(THEME_PURPLE_DARK);
     sliderDisplay.setBaseColor(THEME_PURPLE);
-  }   
+  }      
+
+  if( buttonResetPosition.isPressed() )
+  {
+    buttonResetPosition.ack();
+    sliderDiscrete.moveSliderToValue(128);
+    sliderContinuous.moveSliderToValue(50);
+  }
   
-  sliderDisplay.update();
   sliderDiscrete.update();
   sliderContinuous.update();
   buttonResetPosition.update();
   
-  delay(500); // Always leave a short delay for Bluetooth communication
+  delay(300); // Always leave a short delay for Bluetooth communication
 }

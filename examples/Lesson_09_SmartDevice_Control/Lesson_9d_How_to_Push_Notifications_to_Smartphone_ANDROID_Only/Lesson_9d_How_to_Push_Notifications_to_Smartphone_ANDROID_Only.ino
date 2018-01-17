@@ -20,13 +20,13 @@
 
 // We'll use a button to send the message
 AndeeHelper btnNotify;
-AndeeHelper notificationObject; // The notification must be declared as an object
 
 // The setup() function is meant to tell Arduino what to do 
 // only when it starts up.
 void setup()
 {
   Andee.begin();  // Setup communication between Annikken Andee and Arduino
+  Andee.setName("Notification Demo");//Set the name of the Andee. This name will appear in the app
   Andee.clear();  // Clear the screen of any previous displays
   setInitialData(); // Define object types and their appearance
 }
@@ -38,13 +38,7 @@ void setInitialData()
   btnNotify.setId(0);
   btnNotify.setType(BUTTON_IN);
   btnNotify.setLocation(0,0,FULL);
-  btnNotify.setTitle("Push Notification");
-  
-  notificationObject.setId(1);
-  notificationObject.setType(NOTIFICATION); // Sets object as an SMS object
-  notificationObject.setTitle("Notification Title"); 
-  notificationObject.setMessage("Notification Message"); 
-  notificationObject.setTicker("Text that appears at status bar when notification is pushed"); 
+  btnNotify.setTitle("Push Notification"); 
 }
 
 // Arduino will run instructions here repeatedly until you power it off.
@@ -53,11 +47,10 @@ void loop()
   if( btnNotify.isPressed() ) // When user presses the send button on phone
   {
     btnNotify.ack(); // Acknowledge button press
-    notificationObject.notify(); // Sends the SMS to the recipient
+    Andee.notification("Notification Title", "Notification Message", "Text that appears at status bar when notification is pushed"); // Sends the SMS to the recipient
   }
 
   btnNotify.update();
-  // Do not update SMS objects!
   
   delay(500); // Always leave a short delay for Bluetooth communication
 }

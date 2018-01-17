@@ -16,8 +16,8 @@
 
 // Always include these libraries. Annikken Andee needs them
 // to work with the Arduino!
-#include <Andee.h>
 #include <SPI.h>
+#include <Andee.h>
 
 //We will be creating 3 different display box types
 AndeeHelper displayBoxA;
@@ -29,6 +29,7 @@ AndeeHelper displayBoxC;
 void setup()
 {
   Andee.begin();
+  Andee.setName("DisplayBox Type Demo");//Set the name of the Andee. This name will appear in the app
   Andee.clear();
   setInitialData();
 }

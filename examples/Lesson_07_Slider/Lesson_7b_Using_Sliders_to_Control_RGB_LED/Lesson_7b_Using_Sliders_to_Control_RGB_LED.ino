@@ -47,6 +47,7 @@ char colour[9] = "00000000"; // The initial colour of our display
 void setup()
 {
   Andee.begin();  // Setup communication between Annikken Andee and Arduino
+  Andee.setName("RGB Slider Demo");//Set the name of the Andee. This name will appear in the app
   Andee.clear();  // Clear the screen of any previous displays
   setInitialData(); // Define object types and their appearance
   
@@ -111,9 +112,9 @@ void setInitialData()
 void loop()
 {  
   // Get the slider values of each channel colour
-  r = redSlider.getSliderValue(INT); // Use INT to retrieve integer values
-  g = greenSlider.getSliderValue(INT);
-  b = blueSlider.getSliderValue(INT);
+  redSlider.getSliderValue(&r,INT); // Use INT to retrieve integer values  
+  greenSlider.getSliderValue(&g,INT);
+  blueSlider.getSliderValue(&b,INT);
   
   // Output each channel value
   analogWrite(pinR, r); 
@@ -126,13 +127,13 @@ void loop()
   }
   
   displayCurrentColour.setData(colour); // Show user the ARGB colour code on the smartphone
-  displayCurrentColour.setBaseColor(colour); // Show the actual color on screen
+  displayCurrentColour.setColor(colour); // Show the actual color on screen
   displayCurrentColour.update(); // Update screen
   redSlider.update();
   greenSlider.update();
   blueSlider.update();
   
-  delay(100); // Always leave a short delay for Bluetooth communication
+  delay(500); // Always leave a short delay for Bluetooth communication
 }
 
 

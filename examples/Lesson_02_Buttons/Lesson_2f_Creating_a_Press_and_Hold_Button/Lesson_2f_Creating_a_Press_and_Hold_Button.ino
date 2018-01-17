@@ -37,6 +37,7 @@ const int pinLED = 2; // Set LED pin to output pin 2
 void setup()
 {
   Andee.begin();  // Setup communication between Annikken Andee and Arduino
+  Andee.setName("Hold Button Demo");//Set the name of the Andee. This name will appear in the app
   Andee.clear();  // Clear the screen of any previous displays
   setInitialData(); // Define object types and their appearance
   
@@ -66,7 +67,7 @@ void setInitialData()
 void loop()
 { 
   // Here's how you code a press-and-hold button:
-  if( button.getButtonPressCount() > 0 ) // Do this as long as the button is pressed
+  if( button.isPressed() > 0 ) // Do this as long as the button is pressed
   {
     // Add your press and hold action here:
     digitalWrite(pinLED, HIGH);

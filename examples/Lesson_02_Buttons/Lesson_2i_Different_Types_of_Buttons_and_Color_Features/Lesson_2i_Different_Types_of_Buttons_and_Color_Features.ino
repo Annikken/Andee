@@ -31,6 +31,7 @@ AndeeHelper buttonCircle;
 
 void setup(){
   Andee.begin();
+  Andee.setName("ButtonTypes Demo");//Set the name of the Andee. This name will appear in the app
   Andee.clear();
   setInitialData();
 }

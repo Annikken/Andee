@@ -1,320 +1,573 @@
-// Andee.h - Annikken Andee Library
-// Annikken Pte Ltd
-// Copyright (c) 2016 Annikken Pte Ltd.  All right reserved.
-// Author: Muhammad Hasif
+/*
 
-#ifndef	ANDEE_H
-#define ANDEE_H
+Andee Library for Annikken Andee U/iOS and Android
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+Andee.h
 
+Author: Hasif
+
+*/
 
 #if defined (__arm__)
 #include "itoa.h"
 #endif
 
-#define BUILD_NUMBER 31
-#define BUILD_31
+#define RX_DELAY 50
+#define MAX_BUFFER 256
 
-#define IA_TO_CALL_BUF_SIZE 6
+class AndeeClass
+{
+	private:
+	
+	public:
+/////////////////////Main Andee Functions//////////////////
 
-    char mSpiTransfer(char);
-    bool mGetMessagesFromAndee();
+	AndeeClass();
+	
+	void begin();
+	void begin(int);
+	//This is needed to start using the Annikken Andee. The chip select pin can be changed here
+	
+	void clear();
+	//This function clears the dashboard on the screen of the smartphone/tablet.
+	
+	void setName(char*);
+	//This function allows you to change the Andee name
+	
+	void getMACAddress();	
+	//Gets the MAC Address of the smartdevice connected to the Andee.(Android Only)
+	
+	void disconnect();
+	//This forces the smartphone/tablet to dsconnect its BLE
+	
+	int isConnected();
+	//Check if there is a smartdevice connected to the Andee Board
+	
+//////////////////////DEVICE TIME,DATE,BATTERY////////////////////	
+	void getDeviceTime(int*,int*,int*);
+	//This function converts the time from systemTime in millis to a HH:MM:SS 24 hour clock
+	
+	void getDeviceDate(int*,int*,int*);	
+	//This function converts the time from systemTime in millis to a DD/MM/YYYY format date
+	
+	long getDeviceTimeStamp(void);
+	//This function simply returns the time from systemTime in millis if this is the preferred data	
+//////////////////////PHONE SENSORS & PERIPHERAL//////////////////////	
 
-    class AndeeClass{
-    private:
-        int _sendSDCommands(char*, int, char*, char*, char, int);
-    public:
-        AndeeClass();
-        void begin();
-        void begin(int);
-		void watchBegin();
-        bool sendCommand(char*, char*);
-        int readLineFromSD(char*, int, char*, int, char*);
-        int readBytesFromSD(char*, int, char*, int);
-        int appendSD(char* filename, char* contents, char* errorMsg);
-        int writeSD(char* filename, char* contents, int offset, char* errorMsg);
-        char checkButtons();        // Store the Button States in the Arduino Buffer
-        int isConnected();          // 1 = Connected, 0 = not Connected, -1 = Timeout
-        int isConnected(int);
-        void clear();               // Clear the Screen on the phone
-        void disconnect();          // Disconnect from the connected device
-		void getBatt(char*, char*);
-        //void printDeviceTime(char*, char*);//Deprecated
-        void getDeviceTime(int*, int*, int*);
-        void getDeviceDate(int*, int*, int*);
-        long getDeviceTimeStamp();
-        void setScreenOrientation(int);
-        void screenAlwaysOn(bool);
-        
-        //Bluetooth Functions
-        void setupChipSelect(int);
-        void setChipSelect(int);
-        
-        //Watch Functions
-        bool useUIMaker();
-		void changeScreen(int);
-		void showScreen();
-		void hideScreen();
-		void textInput();
-		char watchButtonPress(void);
+	void vibrate();
+	//This function will cause the smartdevice to vibrate for roughly 1 second
+	
+	void gyroInit(int,int);
+	//This function activates the gyro on the smartphone/tablet. The device will send gyro data based on the number of iterations and interval
+	//interval(time between each sending of gyro data) any integer
+	//iteration(how many data to be sent) any integer. Use -1 if you want to send unlimited amount of data
+	//You will need to call the function getGyroReading to get the data
+	void gyroStop();
+	//Stop all gyro activity
+	void getGyroReading(float*,float*,float*);
+	//Call this function when using gyroInit. The 3 values will be stored to the user's own declared variables
+	
+	void lacInit(int,int);
+	//This function activates the LAC on the smartphone/tablet. The device will send LAC data based on the number of iterations and interval
+	//interval(time between each sending of LAC data) any integer
+	//iteration(how many data to be sent) any integer. Use -1 if you want to send unlimited amount of data
+	//You will need to call the function getLacReading to get the data
+	void lacStop(); 
+	//Stop all LAC activity
+	void getLacReading (float*,float*,float*);
+	//Call this function when using lacInit. The 3 values will be stored to the user's own declared variables
+	
+	void gravInit(int,int);
+	//This function activates the grav on the smartphone/tablet. The device will send grav data based on the number of iterations and interval
+	//interval(time between each sending of grav data) any integer
+	//iteration(how many data to be sent) any integer. Use -1 if you want to send unlimited amount of data
+	//You will need to call the function getGravReading to get the data
+	void gravStop();
+	//Stop all gyro activity
+	void getGravReading(float*,float*,float*);
+	//Call this function when using gravInit. The 3 values will be stored to the user's own declared variables
+	
+	void gpsInit(int,int);
+	//This function activates the GPS on the smartphone/tablet. The device will send GPS data based on the number of iterations and interval
+	//interval(time between each sending of GPS data) any integer
+	//iteration(how many data to be sent) any integer. Use -1 if you want to send unlimited amount of data
+	//You will need to call the function getGpsReading to get the data
+	void gpsStop();
+	//Stop all gyro activity
+	void getGpsReading (float*,float*);
+	//Call this function when using gpsInit. The 3 values will be stored to the user's own declared variables
+	
+//////////////////////////SMS//////////////////////////
+
+	void sendSMS(char*,char*);
+	//This function will make the app send an SMS to the recipient with a message
+	
+/////////////////Camera////////////////////////
+
+	void takePhoto(char, char, char);
+	//This function uses the smartphone/tablet camera to take pictures.
+	//cameraType is either FRONT, REAR or CAM_DEFAULT
+	//autoFocus AUTO, ON or OFF
+	//flash AUTO, ON or OFF
+	
+//////////////////TTS///////////////////////
+
+	void textToSpeech(char*, float, float, char);
+	//This function activates the Text to Speech(TTS) function on the smartphone/tablet. You can place accents, speed and pitch of speech and also the text to be spoken.
+	//accents available are US, GREAT_BRITON, AUSTRALIA, IRELAND, SOUTH_AFRICA 
+	//speed is a value from 0.0 to 2.0(default is 1.0)
+	//pitch is a value from 0.5 to 2.0(default is 1.0)
+	//speech is your string that you want to be vocalized	
+	
+//////////////////////////////////Notification/////////////////////////////////////
+	void notification(char*,char*, char*);
+	
+//////////////////////APPLE WATCH FUNCTIONS//////////////////////
+	
+	void changeScreen(char);
+	//Call this function to change the Apple Watch screen to a particular screen
+	
+	//Apple Watch Functionality//
+	void showScreen();
+	//Call this to show a certain screen
+	
+	void hideScreen();
+	//Call this to hide a certain screen
+	
+	void textInput();
+	//Call this to use the voice to text function of the Apple Watch
+};
+extern AndeeClass Andee;
+///////////////////////////////////
+///////////////////////////////////
+///////////////////////////////////
+///////////////////////////////////
+
+class AndeeHelper
+{
+	private:
+	unsigned char id;
+	unsigned volatile int updateLoop;
+	
+	public:
+	
+	void setId(char);
+	//This function sets the id for the widget
+	
+	void setType(char);
+	/*
+	This function sets the type of widget. The available types for the Andee101 will be 
+	DATA_OUT, DATA_OUT_CIRCLE, DATA_OUT_HEADER, 
+	BUTTON_IN, CIRCLE_BUTTON,
+	ANALOG_DIAL_OUT, 
+	KEYBOARD_IN, DATE_IN, TIME_IN, 
+	SLIDER_IN, TEXTBOX, TTS, JOYSTICK	
+	*/	
 		
-		void AIO_pinMode( int  PinNum,  int Setting);
-		void AIO_INPUT_SETTING(char*);
-		bool AIO_digitalRead (int  PinNum);
-		void AIO_digitalWrite(int  PinNum,  int Setting);
+	void setLocation(char, char, char);
+	//One function to set row,order and span at the same time. Arguments are Row,Column, Span.
+	//This function will then 
+	
+	void setCoord(int, int, int, int);//(x,y,w,h) respectively
+	//This function sets the position and size of the widget. x and y are the x coordinates and y coordinates respectively. w and h is the width and height of the widget respectively. 
+	
+	void setInputMode(char);
+	//This function is to set an input behaviour, depending on the widget.
+	//For Buttons: ACK for an acknowledged button press 
+	//             NO_ACK for a multi press button
+	/*For Sliders: 
+		   ON_FINGER_UP for a slider that updates the value on lifting the finger from the screen
+		   ON_VALUE_CHANGE for a slider that updates the value when the slider is moved
+		   NO_FINGER for a slider that works similar to s progress bar, with no interaction needed from the user 
+				   
+	  For KEYBOARD_IN, TIME_IN and DATE_IN:
+			ALPHA_NUMERIC for AlphaNumeric Keyboard
+			ALPHA_NUMERIC_PW for AlphaNumeric keyboard that hides the typed character after a few seconds
+			NUMERIC for a Numeric Keyboard with symbols
+			NUMERIC_PW for a Numeric Keyboard that hides typed characters after a few seconds
+	*/
+	void requireAck(bool);
+	
+	void setColor(const char*);
+	void setColor(const char);
+	//This function is to store the background color into the appropriate buffer
+	
+	void setTitleColor(const char*);
+	void setTitleColor(const char);
+	//This function is to store the title background color into the appropriate buffer
+	
+	void setTitleTextColor(const char*);
+	void setTitleTextColor(const char);
+	//This function is to store the title font color into the appropriate buffer
+	
+	void setTextColor(const char*);
+	void setTextColor(const char);
+	//This function is to store the font color into the appropriate buffer
+	
+	void setData(const char*);
+	//This function stores the string into the dataBuffer
+	void setData(int);	
+	//This function has the same function as the above function but handles an integer instead
+	void setData(float, char);
+	//This function has the same function as the above function but handles a float instead	
+	
+	void setTitle(const char*);
+	//This function stores the string into the titleBuffer
+	void setTitle(int);	
+	//This function has the same function as the above function but handles an integer instead
+	void setTitle(float, char);
+	//This function has the same function as the above function but handles a float instead	
+	
+	void setUnit(const char*);
+	//This function stores the string into the unitBuffer
+	void setUnit(int);	
+	//This function has the same function as the above function but handles an integer instead
+	void setUnit(float, char);
+	//This function has the same function as the above function but handles a float instead	
+	
+	///////////////////////Used for Slider and Analog Dial Out UI/////////////////////////////
+	
+	void setMinMax(int,int);
+	//This function stores the min and max integer values into the minBuffer and maxBuffer respectively
+	void setMinMax(float,float,char);
+	//This function works in a similar way as the above function but handles a float instead	
+	
+	///////////////////////////////////////////////////////////////////////////////////////////
+	
+	///////////////////////////////////////Slider UI//////////////////////////////////////////
+	//////////////Uses setInputMode
+	
+	void setSliderInitialValue(int);
+	//This function sets the initial value the slider will be at. Value is an integer
+	void setSliderInitialValue(float, char);	
+	//This function works in a similar way as the above function but handles a float instead	
+	
+	void setSliderNumIntervals(int);
+	//This functions sets the number of intervals the slider has
+	
+	void moveSliderToValue(int);		
+	//This function moves the slider to the specified value
+	void moveSliderToValue(float, char);	
+	//This function works in a similar way as the above function but handles a float instead
+	
+	bool getSliderValue(int*,int);
+	//This function returns the value the slider is at for Integers
+	bool getSliderValue(float*,float);
+	//This function returns the value the slider is at for Floats	
+	
+	///////////////////////////////////////////////////////////////////////////////////////////
+	
+	//////////////////////////////Keyboard, Time In and Date In UI//////////////////////////////
+	//////////////Uses setInputMode
+	
+	//void setKeyboardType(char);
+	void getKeyboardMessage(char*);
+	//This function returns the sentence or phrase typed into the smartphone/tablet in the KYBOARD_IN function
+	
+	void setDefaultDate(int,int,int);
+	//When using the type DATE_IN, you can set the default date on the date picker on the smartphone/tablet
+	
+	void getDateInput(int*,int*,int*);
+	//When using the type DATE_IN, this function can retrieve the date input from the smartphone/tablet
+	
+	void setDefaultTime(int,int,int);
+	//When using the type TIME_IN, this function can set the default date on the smartphone/tablet
+	
+	void getTimeInput(int*,int*,int*);
+	//When using the type TIME_IN, this function can retrieve the time input from the smartphone/tablet
+	
+	/////////////////////////////////////////////////////////////////////////////////////////////
+	
+	////////////////////////////////////////Button UI////////////////////////////////////////////
+	//////////////Uses setInputMode	
+	
+	int isPressed(void);
+	//This function is used to check if a particular button is pressed. This function returns a the number of times the button is pressed and a 0 if no button is pressed
+	
+	void ack(void);
+	//This function returns an acknowledgment to the smartphone/tablet that it has received the button press. This is to allow the button widget to refresh	
+	/////////////////////////////////////////////////////////////////////////////////////////////
+	
+	//////////////////////////////////Update & Remove UI//////////////////////////////////////////
+	
+	void update(void);
+	//This function is very important. If this function is not called, the widget will not appear
+	void update(int);
+    
+	void remove();	
+	//This function is used to remove the widget. This is useful in situations where only 1 or more widgets needs to be changed. No arguments needed		
+	
+////////////////////Apple Watch UI////////////////////
+	void setWatchId(char);
+	void setWatchTitle(char*);
+	void setWatchTitle(int);
+	void setWatchTitle(long);
+	void setWatchTitle(float, char);
+	
+	void setWatchColor(char*);
+	void setWatchTitleColor(char*);	
+};
 
-		unsigned int   AIO_INPUTS_READ();
-		void AIO_OUTPUT_WRITE(char*);
 
-		void vibrate();
+void sendAndee(unsigned int,unsigned char*);
+void sendByteAndee(unsigned int,unsigned char);
+void spiSendData(char*, size_t);
+bool pollRx(char*);
+void resetBuffer(char*,unsigned int);
 
- };
+void convertFloatToString(char*,float, int);
+    
+enum//For All Andee Commands
+{
+/////////////////////Main Andee Functions//////////////////
+	CLEAR_UI,//0
+	SET_ANDEE_NAME,
+	GET_MAC_ADDRESS,
+	DISCONNECT,
+	CHECK_CONNECTION,
+/////////////////////DEVICE TIME,DATE,BATTERY//////////////////
+	GET_BATTERY_LEVEL,//5
+	GET_DEVICE_TIME,
+	GET_DEVICE_DATE,
+	GET_DEVICE_TIMESTAMP,
+	SET_SCREEN_ORIENTATION,
+	SET_SCREEN_ALWAYS_ON,//10
+///////////////////////PHONE SENSORS & PERIPHERAL/////////////////////
+	VIBRATE,
+	GYRO_INIT,
+	GYRO_STOP,
+	GET_GYRO_READING,
 
-    class AndeeHelper{
-    private:
-        char _id;
-        char _link;
-        bool _isCorrectId(char*);
-        void _setFloat(char*, float, char);
-        void _setDouble(char*, double, char);
-        void _setInt(char*, int);
-        void _setLong(char*, long);
-        void _setULong(char*, unsigned long);
-    public:
-        AndeeHelper();
-        void setId(char);
-		
-		void simpleDataBox(char,char*,char*);
-		void simpleDataBox(char,char*,int);
-		void simpleDataBox(char,char*,long);
-		void simpleDataBox(char,char*,float);
-		void simpleDataBox(char,char*,double);
-		
-			
-		
-        void setTitle(char*);
-        void setTitle(int);
-        void setTitle(long);
-        void setTitle(float, char);
-        void setTitle(double, char);
-        void setUnit(char*);
-        void setUnit(int);
-        void setUnit(long);
-        void setUnit(float, char);
-        void setUnit(double, char);
-        void setData(char*);
-        void setData(int);
-        void setData(long);
-        void setData(unsigned long);
-        void setData(float);
-        void setData(float, char);
-        void setData(double, char);
-        void setType(char);
-        void setOrder(char);
-        void setRow(char);
-        void setSpan(char);
-        void setLocation(char, char, char);
-        void setCoord(int,int,int,int);
-        void setCoordFraction(float,float,float,float);
-        void update();
-        void update2();
-        void updateData(char*);
-        void updateData(int);
-        void updateData(long);
-        void updateData(unsigned long);
-        void updateData(float, char);
-        void updateData(double, char);
-        bool isPressed();   //Check Button Press Status by asking Andee via SPI
-        bool isPressed2();  //Check Button Press Status by checking the Buffer in Arduino Library, Call checkButtons() to update Buffer
-        int  pressCounter();
-        int  isPressed(int);
-        void ack();
-        void getKeyboardMessage(char*);
-		void sendKeyboardMessage(char*);
-        void remove();
-        void setColor(char*);
-        void setTitleColor(char*);
-        void setTextColor(char);
-        void setTextColor(char*);
-        void setTitleTextColor(char);
-        void setTitleTextColor(char*);
-        void setHintText(char*);
-        void setKeyboardType(char);
-        void setRecipient(char*);
-        void send();
-        void setMessage(char*);
-        void setTicker(char*);
-        void notify();
-        void setDefaultTime(int hr, int min, int sec);
-        void setDefaultDate(int date, int mth, int year);
-        void getTimeInput(char*, char*);
-        void getDateInput(char*, char*);
-        void getDateInput(int*, int*, int*);
-        void getTimeInput(int*, int*, int*);
-        void setCamera(char);
-        void setAutoFocus(char);
-        void setFlash(char);
-        void setPhotoFilename(char*);
-        void takePhoto();
-        bool takePhotoResultReady();
-        char getLastTakePhotoResult();
-        void setSaveLocation(char);
-        void setFileOverwrite(char);
-        void requireAck(bool);
-        int getButtonPressCount();
-		//Watch Funtions
-		void setWatchId(char);
-        void setWatchTitle(char*);
-        void setWatchTitle(int);
-        void setWatchTitle(long);
-        void setWatchTitle(float, char);
-        void setWatchTitle(double, char);
-		void setWatchColor(char*);
-        void setWatchTitleColor(char*);
-		
-				
-        void setSliderMinMax(float, float, char);
-        void setSliderMinMax(int, int);
-        void setSliderMinMax(long, long);
-        void setSliderInitialValue(float, char);
-        void setSliderInitialValue(int);
-        void setSliderNumIntervals(int);
-        void setSliderReportMode(char);
-        void moveSliderToValue(int);
-        void moveSliderToValue(float, char);
-        bool newSliderValueAvailable();
-        int  getSliderValue(int);
-        float getSliderValue(float);
-        void setSliderColor(char*);
+	LAC_INIT,//15
+	LAC_STOP,
+	GET_LAC_READING,
 
-        //for iOS TTS
-        void setUtteranceSpeed(float);
-        void setPitch(float);
-        void setAccent(int);
-		
-		//GYRO,ACC,LAC,GPS,ORN functions
-		//void getGyroReading(char*);
-		void getGyroReading(float*,float*,float*);
-		void getAccReading (float*,float*,float*);
-		void getGravReading(float*,float*,float*);
-		void getOrientReading(char*);
-		void getLacReading (float*,float*,float*);
-		void getGpsReading (float*,float*);
-		void getProxReading (char*);
-		
-        void GYRO_1_INIT();
-		void gyroInit(int,int);
-		void gyroStop();
-		
-		void ORN_1_INIT();
-		void orientInit(int,int);
-		void orientStop();
+	GRAV_INIT,
+	GRAV_STOP,
+	GET_GRAV_READING,//20
 
-		void LAC_1_INIT();
-		void lacInit(int,int);
-		void lacStop();
+	GPS_INIT,
+	GPS_STOP,
+	GET_GPS_READING,
 
-		void ACC_1_INIT();
-		void accInit(int,int);
-		void accStop();
-		
-		void GRV_1_INIT();
-		void gravInit(int,int);
-		void gravStop();
+	SEND_SMS,
 
-		void PRX_1_INIT();
-		void proxInit(int,int);
-		void proxStop();
-		
-		void GPS_1_INIT();
-		void gpsInit(int,int);
-		void gpsStop();
-        
-    };
+	TAKE_PHOTO,//25
 
-    extern AndeeClass Andee;
+	TEXT_TO_SPEECH,
 
-#define setDefaultValue setSliderNumIntervals
-#define setInputType setSliderReportMode
-#define setMinMax setSliderMinMax
+	NOTIFICATION,
+/////////////////////////////MICROSD FUNCTIONS////////////////////////////////
+	APPEND_SD,
+	WRITE_SD,
+	READ_BYTES_FROM_SD,//30
+	READ_STRING_FROM_SD,
+///////////////////////////AIO PINS///////////////////////////////
+	AIO_PIN_MODE,
+	AIO_DIGITAL_WRITE,
+	AIO_DIGITAL_READ,
+//////////////////////////////APPLE WATCH FUNCTIONS///////////////////////////
+	CHANGE_SCREEN,//35
+	SHOW_SCREEN,
+	HIDE_SCREEN,
+	TEXT_INPUT,
 
-#define setBaseColor setColor
-#define setActiveColor setTitleColor
+
+/////////////////////////ANDEEHELPER FUNCTIONS/////////////////////////////////
+	SET_ID,
+
+	SET_TYPE,//40
+	
+	SET_LOCATION,
+	SET_COORD,
+
+	SET_INPUT_MODE,
+
+	SET_COLOR,
+    SET_TEXT_COLOR,//45
+	SET_TITLE_COLOR,
+	SET_TITLE_TEXT_COLOR,
+
+	SET_DATA,
+	SET_DATA_FLOAT,
+	SET_TITLE,//50
+	SET_TITLE_FLOAT,
+	SET_UNIT,
+	SET_UNIT_FLOAT,
+
+	SET_MIN_MAX,
+	SET_MIN_MAX_FLOAT,//55
+	
+	SET_SLIDER_NUM_INTERVALS,
+	MOVE_SLIDER_TO_VALUE,
+	GET_SLIDER_VALUE,
+
+	GET_KEYBOARD_MSG,
+	SET_DEFAULT_DATE,//60
+	GET_DATE_INPUT,
+	SET_DEFAULT_TIME,
+	GET_TIME_INPUT,
+
+	IS_PRESSED,
+	ACKNOWLEDGE,//65
+	PRESS_COUNTER,
+
+	UPDATE,
+	REMOVE,//68
+
+}andeeCommand;
+
+
 #define setMainColor setColor
 #define setSubColor setTitleColor
+#define setKeyboardType setInputMode
 
 #define Helper AndeeHelper
-#define BOOL bool
-#define C_HLIMIT 999
-#define C_LLIMIT 0
-#define SCREEN_WIDTH 768
-#define SCREEN_HEIGHT 960
-    /*************************************************************
-     **************       Internal MACROS      *******************
-     ************************************************************/
-#define NONE 0
-#define DTIME 1
-#define CONNSTAT 6
-#define DTT 7
-#define DTD 8
-#define DTS 9
-#define CLR 10
-#define DCN 11
-#define UIMAKER 12
-#define BEGIN 13
-#define CSC 14
-#define SSC 15
-#define HSC 16
-#define INP 17
-#define GETBUTTON 20
-#define BAT 22
-#define VIB 23
-#define WATCH_TITLE 44
-#define WATCH_BUTTON0 45
-#define WATCH_BUTTON1 46
-#define WATCH_BUTTON2 47
-#define WATCH_BUTTON3 48
-#define WATCH_BUTTON4 49
+#define SCREEN_UPPER_LIMIT 100
+#define SCREEN_LOWER_LIMIT 0
 
-    /*************************************************************
-     **************       TYPE MACROS      ***********************
-     ************************************************************/
+/*************************************************************
+ ***************      UI TYPE MACROS      ********************
+ ************************************************************/
 #define DATA_OUT 'C'
 #define DATA_OUT_HEADER 'H'
 #define DATA_OUT_CIRCLE 'G'
 #define ANALOG_DIAL_OUT 'R'
 #define BUTTON_IN 'B'
 #define CIRCLE_BUTTON 'J'
-#define KEYBOARD_IN 'I'
-#define DATE_IN 'E'
-#define TIME_IN 'F'
+#define KEYBOARD_IN 'K'
+#define DATE_IN 'D'
+#define TIME_IN 'X'
 #define SLIDER_IN 'Q'
-#define CAMERA 'P'
-#define TTS 'T'
-#define SMS_SENDER 'S'
-#define NOTIFICATION 'N'
 #define WATCH 'W'
-#define VIBRATE '~'
 
-
-    /*************************************************************
-     *********       ORIENTATION MACROS      *********************
-     ************************************************************/
+/*************************************************************
+ *********       ORIENTATION MACROS      *********************
+ ************************************************************/
 #define AUTO 0
 #define AUTO_PORTRAIT 1
 #define AUTO_LANDSCAPE 2
 #define PORTRAIT 3
 #define PORTRAIT_REVERSE 4
 #define LANDSCAPE 5
-#define LANDSCAPE_REVERSE 6
-    /*************************************************************
-     **************      COLOR MACROS      ***********************
-     ************************************************************/
-#define TEXT_LIGHT '0'
-#define TEXT_DARK '1'
+#define LANDSCAPE_REVERSE 6    
+    
+/*************************************************************
+ **************      CONNECTION MACROS      ******************
+ ************************************************************/    
+#define ANDEE_CONNECTED 1
+#define ANDEE_NOTCONNECTED 0
+#define ANDEE_TIMEOUT -1
+
+#define CONNECTED 1
+#define NOT_CONNECTED 0
+#define TIMEOUT -1
+
+/*************************************************************
+ ****************      BUTTON MACROS      ********************
+ ************************************************************/	 
+#define ACK '0'
+#define NOACK NO_ACK
+#define NO_ACK '1'	 
+    
+/*************************************************************
+ **************      LOCATION MACROS      ********************
+ ************************************************************/ 
+#define ONE_THIRD 1
+#define TWO_THIRD 2
+#define FULL 3
+#define ONE_QUART 4
+#define HALF 5
+#define THREE_QUART 6
+
+/*************************************************************
+ ****************      SLIDER MACROS      ********************
+ ************************************************************/ 
+#define setActiveColor setTitleColor///Used for AnalogDial as well
+#define setBaseColor setColor///Used for AnalogDial as well
+
+#define setSliderMinMax setMinMax
+#define setSliderReportMode setInputMode
+
+#define INT 0
+#define FLOAT (float)0.0
+#define NO_FINGER '2'
+#define ON_VALUE_CHANGE '1'
+#define ON_FINGER_UP '0'
+
+/*************************************************************
+ **************      DATE/TIME INPUT MACROS      *************
+ ************************************************************/ 
+#define Jan 0
+#define Feb 1
+#define Mar 2
+#define Apr 3
+#define May 4
+#define Jun 5
+#define Jul 6
+#define Aug 7
+#define Sep 8
+#define Oct 9
+#define Nov 10
+#define Dec 11
+
+/*************************************************************
+ **************      CAMERA MACROS               *************
+ ************************************************************/ 
+#define AUTO '0'
+#define CAM_DEFAULT '0'
+#define FRONT '1'
+#define REAR '2'
+#define ON '1'
+#define OFF '2'
+
+#define SDCARD '1'
+
+/*************************************************************
+ **************      KEYBOARD MACROS             *************
+ ************************************************************/ 
+#define ALPHA_NUMERIC '0'
+#define ALPHA_NUMERIC_PW '1'
+#define NUMERIC '2'
+#define NUMERIC_PW '3'
+
+/*************************************************************
+ **************     iOS Text To Speech           *************
+ ************************************************************/ 
+#define US '0'
+#define GREAT_BRITON '1'
+#define AUSTRALIA '2'
+#define IRELAND '3'
+#define SOUTH_AFRICA '4'   
+
+/*************************************************************
+ ******************     APPLE WATCH           ****************
+ ************************************************************/ 
+#define setWatchColor setTitleColor
+#define setWatchTextColor setTitleTextColor
+#define setWatchText setTitle
+
+#define WATCH_TITLE 45//77
+#define WATCH_BUTTON1 46//78
+#define WATCH_BUTTON2 47//79
+#define WATCH_BUTTON3 48//80
+#define WATCH_BUTTON4 49//81
+
+#define WATCH_1BUTTON_A	0
+#define WATCH_2BUTTON_A	1
+#define WATCH_3BUTTON_A	2
+#define WATCH_4BUTTON_A	3
+#define WATCH_1BUTTON_B	4
+#define WATCH_2BUTTON_B	5
+#define WATCH_3BUTTON_B	6
+#define WATCH_4BUTTON_B	7
+#define WATCH_GAMEPAD	8
+
+/*************************************************************
+ **************      COLOR MACROS      ***********************
+ ************************************************************/ 
+#define TEXT_LIGHT "FFFFFFFF"
+#define TEXT_DARK "FF000000"
 #define PINK "FFFFC0CB"
 #define LIGHT_PINK "FFFFB6C1"
 #define HOT_PINK "FFFF69B4"
@@ -458,9 +711,6 @@ extern "C" {
 #define TRANSPARENT "00FFFFFF"
 #define DEFAULT_COLOR "FF83A4C8"
 #define DEFAULT_TITLE_COLOR "FF2E5B82"
-    // Legacy colour codes
-#define DKGRAY "FF444444"
-#define LTGRAY "FFCCCCCC"
     //THEME COLORS
 #define THEME_TURQUOISE "FF1ABC9C"
 #define THEME_TURQUOISE_DARK "FF16A085"
@@ -482,97 +732,3 @@ extern "C" {
 #define THEME_GREY_DARK "FF7F8C8D"
 #define THEME_DEFAULT DEFAULT_COLOR // Please set the Andee Blue Colour
 #define THEME_DEFAULT_DARK DEFAULT_TITLE_COLOR // Please set  the Andee Dark Blue Colour
-
-    
-    /*************************************************************
-     **************      CONNECTION MACROS      ******************
-     ************************************************************/
-    
-#define ANDEE_CONNECTED 1
-#define ANDEE_NOTCONNECTED 0
-#define ANDEE_TIMEOUT -1
-    
-    /*************************************************************
-     **************      LOCATION MACROS      ********************
-     ************************************************************/
-#define ONE_THIRD 1
-#define TWO_THIRD 2
-#define FULL 3
-#define ONE_QUART 4
-#define HALF 5
-#define THREE_QUART 6
-    /*************************************************************
-     **************      SLIDER MACROS      ********************
-     ************************************************************/
-#define INT 0
-#define FLOAT (float)0.0
-#define NO_FINGER '2'
-#define ON_VALUE_CHANGE '1'
-#define ON_FINGER_UP '0'
-
-    /*************************************************************
-     **************      DATE/TIME INPUT MACROS      *************
-     ************************************************************/
-#define Jan 0
-#define Feb 1
-#define Mar 2
-#define Apr 3
-#define May 4
-#define Jun 5
-#define Jul 6
-#define Aug 7
-#define Sep 8
-#define Oct 9
-#define Nov 10
-#define Dec 11
-
-    /*************************************************************
-     **************      CAMERA MACROS               *************
-     ************************************************************/
-#define CAM_DEFAULT '0'
-#define FRONT '1'
-#define REAR '2'
-#define ON '1'
-#define OFF '2'
-#define SDCARD '1'
-
-    /*************************************************************
-     **************      KEYBOARD MACROS             *************
-     ************************************************************/
-#define ALPHA_NUMERIC '0'
-#define ALPHA_NUMERIC_PW '1'
-#define NUMERIC '2'
-#define NUMERIC_PW '3'
-
-    /*************************************************************
-     **************     iOS Text To Speech           *************
-     ************************************************************/
-#define US 0
-#define GREAT_BRITON 1
-#define AUSTRALIA 2
-#define IRELAND 3
-#define SOUTH_AFRICA 4
-
-#define CONNECTED 1
-#define NOT_CONNECTED 0
-#define TIMEOUT -1
-    
-    /*************************************************************
-     **************     APPLE WATCH           *************
-     ************************************************************/
-#define WATCH_1BUTTON_A	0
-#define WATCH_2BUTTON_A	1
-#define WATCH_3BUTTON_A	2
-#define WATCH_4BUTTON_A	3
-#define WATCH_1BUTTON_B	4
-#define WATCH_2BUTTON_B	5
-#define WATCH_3BUTTON_B	6
-#define WATCH_4BUTTON_B	7
-#define WATCH_GAMEPAD	8
-
-
-#ifdef  __cplusplus
-}
-#endif
-
-#endif

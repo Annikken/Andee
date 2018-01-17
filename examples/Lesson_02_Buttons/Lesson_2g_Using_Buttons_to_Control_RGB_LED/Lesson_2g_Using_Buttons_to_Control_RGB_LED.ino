@@ -51,6 +51,7 @@ char colour[7] = "000000"; // The initial colour of our display
 void setup()
 {
   Andee.begin();  // Setup communication between Annikken Andee and Arduino
+  Andee.setName("RGB LED Demo");//Set the name of the Andee. This name will appear in the app
   Andee.clear();  // Clear the screen of any previous displays
   setInitialData(); // Define object types and their appearance
   
@@ -127,32 +128,32 @@ void loop()
 
   // Buttons used to adjust the colour channel intensity. We will employ
   // the press-and-hold button method to control the RGB LEDs
-  if( buttonRup.getButtonPressCount() > 0 ) // Red button up will increase red intensity
+  if( buttonRup.isPressed() > 0 ) // Red button up will increase red intensity
   {
     r = r+resolution; // Increase the intensity by a fixed amount (specified above)
     if(r>255) r = 255; // 255 is the max value. If it goes beyond that, set the value to 255.  
   }  
-  if( buttonRdown.getButtonPressCount() > 0 ) // Red button down will decrease red intensity
+  if( buttonRdown.isPressed() > 0 ) // Red button down will decrease red intensity
   {
     r = r-resolution; // Decrease the intensity by a fixed amount (specified above)
     if(r<1) r = 0; // 0 is the min value. If it goes under that, set the value to 0.     
   }
-  if( buttonGup.getButtonPressCount() > 0 ) // Green button up will increase green intensity
+  if( buttonGup.isPressed() > 0 ) // Green button up will increase green intensity
   {
     g = g+resolution;
     if(g>255) g = 255;   
   }  
-  if( buttonGdown.getButtonPressCount() > 0 ) // Green button down will decrease green intensity
+  if( buttonGdown.isPressed() > 0 ) // Green button down will decrease green intensity
   {
     g = g-resolution;
     if(g<1) g = 0;      
   }
-  if( buttonBup.getButtonPressCount() > 0 ) // Blue button up will increase blue intensity
+  if( buttonBup.isPressed() > 0 ) // Blue button up will increase blue intensity
   {
     b = b+resolution;
     if(b>255) b = 255;
   }
-  if( buttonBdown.getButtonPressCount() > 0 ) // Blue button down will decrease blue intensity
+  if( buttonBdown.isPressed() > 0 ) // Blue button down will decrease blue intensity
   {
     b = b-resolution;
     if(b<1) b = 0;

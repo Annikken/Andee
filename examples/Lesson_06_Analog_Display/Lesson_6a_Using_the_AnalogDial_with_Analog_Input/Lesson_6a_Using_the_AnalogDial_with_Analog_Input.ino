@@ -36,6 +36,7 @@ const int maxValue = 255;//dial's max value
 void setup()
 {
   Andee.begin();  // Setup communication between Annikken Andee and Arduino
+  Andee.setName("Analog Dial Demo");//Set the name of the Andee. This name will appear in the app
   Andee.clear();  // Clear the screen of any previous displays
   setInitialData(); // Define object types and their appearance
 }
@@ -67,7 +68,8 @@ void loop()
   // Read value from analog pin and store it in an int variable
   int reading = analogRead(analogInputPin);  
    
-  analogDial.updateData(reading); //show dial and update value on screen
+  analogDial.setData(reading); //show dial and update value on screen
+  analogDial.update();
   
   // A short delay is necessary to give Andee time to communicate with the smartphone
   delay(500); 

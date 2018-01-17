@@ -20,18 +20,13 @@
 
 // We'll use a button to send the message
 AndeeHelper sendMessage;
-AndeeHelper SMSobject; // The message and recipient must be declared as an object
-
-// You can use the text input button to get the user to set the
-// recipient number and even the message itself!
-char messageRecipient[] = "+6587654321";
-char message[] = "Hello World!";
 
 // The setup() function is meant to tell Arduino what to do 
 // only when it starts up.
 void setup()
 {
   Andee.begin();  // Setup communication between Annikken Andee and Arduino
+  Andee.setName("SMS Demo");//Set the name of the Andee. This name will appear in the app
   Andee.clear();  // Clear the screen of any previous displays
   setInitialData(); // Define object types and their appearance
 }
@@ -44,11 +39,6 @@ void setInitialData()
   sendMessage.setType(BUTTON_IN);
   sendMessage.setLocation(0,0,FULL);
   sendMessage.setTitle("Send SMS");
-  
-  SMSobject.setId(1);
-  SMSobject.setType(SMS_SENDER); // Sets object as an SMS object
-  SMSobject.setRecipient(messageRecipient);
-  SMSobject.setMessage(message);
 }
 
 // Arduino will run instructions here repeatedly until you power it off.
@@ -57,11 +47,10 @@ void loop()
   if( sendMessage.isPressed() ) // When user presses the send button on phone
   {
     sendMessage.ack(); // Acknowledge button press
-    SMSobject.send(); // Sends the SMS to the recipient
+    Andee.sendSMS("+6512341234", "Hello oo oo oo oo");
   }
 
   sendMessage.update();
-  // Do not update SMS objects!
   
   delay(500); // Always leave a short delay for Bluetooth communication
 }

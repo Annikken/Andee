@@ -32,16 +32,16 @@ AndeeHelper btnSongC; // Select song C
 // all these songs in the RAM, it will cause the Annikken Andee to stop functioning.
 // As you can see, we're storing the songs and beats as a string. We'll have some code
 // later to convert each character in the string into a note
-prog_char header0[] PROGMEM = "eeeeeeegcdefffffeeeeeddedg eeeeeeegcdefffffeeeeggfdc";
-prog_char header1[] PROGMEM = "4424424444144444448844442444424424444144444448844441";
-prog_char header2[] PROGMEM = "gagegageDDbCCgaaCbagageaaCbagageDDFDbCECgegfdc";
-prog_char header3[] PROGMEM = "6843684324324324684684324684684324444334446843";
-prog_char header4[] PROGMEM = "CbagfedcgaabbCCCbaggfeC CbaggfeeeeeefgfeddddefedcCagfefedc";
-prog_char header5[] PROGMEM = "2683422343434134444468444444684444488388444883884246844221";
+const char header0[] PROGMEM = "eeeeeeegcdefffffeeeeeddedg eeeeeeegcdefffffeeeeggfdc";
+const char header1[] PROGMEM = "4424424444144444448844442444424424444144444448844441";
+const char header2[] PROGMEM = "gagegageDDbCCgaaCbagageaaCbagageDDFDbCECgegfdc";
+const char header3[] PROGMEM = "6843684324324324684684324684684324444334446843";
+const char header4[] PROGMEM = "CbagfedcgaabbCCCbaggfeC CbaggfeeeeeefgfeddddefedcCagfefedc";
+const char header5[] PROGMEM = "2683422343434134444468444444684444488388444883884246844221";
 
 // This is a program memory directory that will allow Arduino (and us) to easily locate
 // where our songs are stored in the program memory.
-PROGMEM const char *string_table[] = 
+const char * const string_table[] PROGMEM= 
 {
   header0, // Jingle Bells melody
   header1, // Jingle Bells beats

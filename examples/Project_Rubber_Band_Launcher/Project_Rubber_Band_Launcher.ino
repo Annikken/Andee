@@ -105,7 +105,7 @@ void setInitialData()
   btnReset.setType(BUTTON_IN);
   btnReset.setTitle("");
   btnReset.setLocation(1,0,ONE_THIRD);
-  btnReset.setColor(DKGRAY);
+  btnReset.setColor(DARK_GRAY);
 
   btnUp.setId(2);
   btnUp.setType(BUTTON_IN);
@@ -118,7 +118,7 @@ void setInitialData()
   btnposA.setType(BUTTON_IN);
   btnposA.setTitle("Save Position");
   btnposA.setLocation(1,2,ONE_THIRD);
-  btnposA.setColor(DKGRAY); 
+  btnposA.setColor(DARK_GRAY); 
 
   btnLeft.setId(4);
   btnLeft.setType(BUTTON_IN);
@@ -142,10 +142,10 @@ void setInitialData()
 
   btnposMoveX.setId(7);
   btnposMoveX.setType(KEYBOARD_IN);
-  btnposMoveX.setKeyboardType(ANDROID_NUMERIC);
+  btnposMoveX.setKeyboardType(ALPHA_NUMERIC);
   btnposMoveX.setTitle("Move X-axis");
   btnposMoveX.setLocation(3,0,ONE_THIRD);
-  btnposMoveX.setColor(DKGRAY);
+  btnposMoveX.setColor(DARK_GRAY);
 
   btnDown.setId(8);
   btnDown.setType(BUTTON_IN);
@@ -156,10 +156,10 @@ void setInitialData()
 
   btnposMoveY.setId(9);
   btnposMoveY.setType(KEYBOARD_IN);
-  btnposMoveY.setKeyboardType(ANDROID_NUMERIC);
+  btnposMoveY.setKeyboardType(ALPHA_NUMERIC);
   btnposMoveY.setTitle("Move Y-axis");
   btnposMoveY.setLocation(3,2,ONE_THIRD);
-  btnposMoveY.setColor(DKGRAY);
+  btnposMoveY.setColor(DARK_GRAY);
 }
 
 // Function to move launcher downwards
@@ -330,19 +330,19 @@ void loop()
     moveX(atoi(input));
     memset(input,0x00, 3);
   }  
-  if(btnUp.getButtonPressCount() > 0)
+  if(btnUp.isPressed() > 0)
   {
     turnUp();
   }
-  if(btnDown.getButtonPressCount() > 0)
+  if(btnDown.isPressed() > 0)
   {
     turnDown();
   }
-  if(btnLeft.getButtonPressCount() > 0)
+  if(btnLeft.isPressed() > 0)
   {
     turnLeft();
   }
-  if(btnRight.getButtonPressCount() > 0)
+  if(btnRight.isPressed() > 0)
   {
     turnRight();
   }
