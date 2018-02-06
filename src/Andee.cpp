@@ -19,9 +19,9 @@ Author: Hasif
 
 unsigned int SS_PIN = 8;
 
-char txBuffer[MAX_BUFFER];
-char rxBuffer[MAX_BUFFER];
-char buttonBuffer[100];
+char txBuffer[TX_MAX];
+char rxBuffer[RX_MAX];
+char rxCount = 0;
 
 unsigned char EMPTY[3] = {'N','A','\0'};
 
@@ -39,7 +39,7 @@ void AndeeClass::begin(){
     pinMode(MOSI, OUTPUT);
 	delay(500);
 	
-	memset(rxBuffer,0x00,MAX_BUFFER);
+	memset(rxBuffer,0x00,RX_MAX);
 	
 	//andeeCommand = BEGIN;
 	//sendAndee(99,EMPTY);	
@@ -271,7 +271,9 @@ void AndeeClass::sendSMS(char* number,char* message){
 	andeeCommand = SEND_SMS;
 	
 	char temp[90];
-	sprintf(temp,"%s,%s\0",number,message);
+	char limit[64];
+	memcpy(limit,message,64);	
+	sprintf(temp,"%s,%s\0",number,limit);
 	sendAndee(99,temp);
 }
 
@@ -289,19 +291,27 @@ void AndeeClass::takePhoto(char cameraType, char autoFocus, char flash){
 
 void AndeeClass::textToSpeech(char* speech, float speed, float pitch, char accent ){
 	andeeCommand = TEXT_TO_SPEECH;	
-	char temp[128];
+	char temp[100];
+	char limit[64];
+	memcpy(limit,speech,64);
 	int speedInt = speed * 10;
 	int pitchInt = pitch * 10;
-	sprintf(temp,"%s,%i,%i,%c\0",speech,speedInt,pitchInt,accent);	
+	sprintf(temp,"%s,%i,%i,%c\0",limit,speedInt,pitchInt,accent);	
 	
 	sendAndee(99,temp);
 }
 
 void AndeeClass::notification(char* title,char* message, char* ticker){
 	andeeCommand = NOTIFICATION;
-	char temp[200];
+	char temp[102];
+	char titleLimit[32];
+	char msgLimit[32];
+	char tickerLimit[32];
+	memcpy(titleLimit,title,32);
+	memcpy(msgLimit,message,32);
+	memcpy(tickerLimit,ticker,32);
 	memset(temp,0x00,200);
-	sprintf(temp,"%s,%s,%s",title,message,ticker);
+	sprintf(temp,"%s,%s,%s\0",titleLimit,msgLimit,tickerLimit);
 	
 	sendAndee(99,temp);
 }
@@ -573,17 +583,22 @@ void AndeeHelper::setTextColor(const char color){
 
 void AndeeHelper::setData(const char* data){
 	andeeCommand = SET_DATA;
+	char temp[64];
 	if(strlen(data) == 0)
 	{
-		data = "    ";
+		data = "     \0";
 	}
-	sendAndee(id,data);
+	else
+	{
+		memcpy(temp,data,64);
+	}
+	sendAndee(id,temp);
 }
 
 void AndeeHelper::setData(int data){
 	andeeCommand = SET_DATA;
-	char temp[12];
-	sprintf(temp,"%d;;;",data);
+	char temp[13];
+	sprintf(temp,"%d\0",data);
 	sendAndee(id,temp);
 }
 
@@ -598,24 +613,29 @@ void AndeeHelper::setData(float data,char decPlace){
 
 void AndeeHelper::setTitle(const char* title){
 	andeeCommand = SET_TITLE;
+	char temp[64];
 	if(strlen(title) == 0)
 	{
-		title = "    ";
+		title = "     \0";
 	}
-	sendAndee(id,title);
+	else
+	{
+		memcpy(temp,title,64);
+	}
+	sendAndee(id,temp);
 }
 
 void AndeeHelper::setTitle(int title){
 	andeeCommand = SET_TITLE;
-	char temp[12];
-	sprintf(temp,"%d;;;",title);
+	char temp[13];
+	sprintf(temp,"%d\0",title);
 	sendAndee(id,temp);
 }
 
 void AndeeHelper::setTitle(float title, char decPlace){
 	andeeCommand = SET_TITLE_FLOAT;
 	
-	char* temp;	
+	char temp[26];	
 	convertFloatToString(temp,title,decPlace);
 	
 	sendAndee(id,temp);
@@ -623,24 +643,29 @@ void AndeeHelper::setTitle(float title, char decPlace){
 
 void AndeeHelper::setUnit(const char* unit){
 	andeeCommand = SET_UNIT;
+	char temp[64];
 	if(strlen(unit) == 0)
 	{
-		unit = "    ";
+		unit = "     \0";
 	}
-	sendAndee(id,unit);
+	else
+	{
+		memcpy(temp,unit,64);
+	}
+	sendAndee(id,temp);
 }
 
 void AndeeHelper::setUnit(int unit){
 	andeeCommand = SET_UNIT;
-	char temp[12];
-	sprintf(temp,"%d;;;",unit);
+	char temp[13];
+	sprintf(temp,"%d\0",unit);
 	sendAndee(id,temp);
 }
 
 void AndeeHelper::setUnit(float unit, char decPlace){
 	andeeCommand = SET_UNIT_FLOAT;
 	
-	char* temp;	
+	char temp[26];
 	convertFloatToString(temp,unit,decPlace);
 	
 	sendAndee(id,temp);
@@ -650,7 +675,7 @@ void AndeeHelper::setMinMax(int min, int max){
 	andeeCommand = SET_MIN_MAX;
 	
 	char temp[23];
-	sprintf(temp,"%d,%d",min,max);
+	sprintf(temp,"%d,%d\0",min,max);
 	sendAndee(id,temp);
 }
 
@@ -663,7 +688,7 @@ void AndeeHelper::setMinMax(float min,float max,char decPlace){
 	convertFloatToString(minF,min,decPlace);
 	convertFloatToString(maxF,max,decPlace);
 	
-	sprintf(temp,"%s,%s",minF,maxF);
+	sprintf(temp,"%s,%s\0",minF,maxF);
 	
 	sendAndee(id,temp);
 }
@@ -753,7 +778,7 @@ void AndeeHelper::setDefaultDate(int day, int month, int year){
 	andeeCommand = SET_DEFAULT_DATE;
 	
 	char temp[12];
-	sprintf(temp,"%02i%02i%04i", day%31, month%12, year);
+	sprintf(temp,"%02i%02i%04i\0", day%31, month%12, year);
 	sendAndee(id,temp);
 }
 
@@ -791,7 +816,7 @@ void AndeeHelper::setDefaultTime(int hour,int min, int sec){
 	andeeCommand = SET_DEFAULT_TIME;
 	
 	char temp[10];
-	sprintf(temp,"%02i%02i%02i", hour%24, min%60, sec%60);
+	sprintf(temp,"%02i%02i%02i\0", hour%24, min%60, sec%60);
 	
 	sendAndee(id,temp);
 }
@@ -873,14 +898,14 @@ void AndeeHelper::remove(){
  * Functions to pack and send commands to PIC32
  *****************************************************************************/
 void sendAndee(unsigned int id,unsigned char* message){
-	memset(txBuffer,0x00,MAX_BUFFER);
-	sprintf(txBuffer,"#%d#%d#%s;",id,andeeCommand,message);	
+	memset(txBuffer,0x00,TX_MAX);
+	sprintf(txBuffer,"#%d#%d#%s;\0",id,andeeCommand,message);	
 	
 	spiSendData( txBuffer,strlen(txBuffer) );	
 }
 void sendByteAndee(unsigned int id,unsigned char message){
-	memset(txBuffer,0x00,MAX_BUFFER);
-	sprintf(txBuffer,"#%d#%d#%c;",id,andeeCommand,message);
+	memset(txBuffer,0x00,TX_MAX);
+	sprintf(txBuffer,"#%d#%d#%c;\0",id,andeeCommand,message);
 	
 	spiSendData( txBuffer,strlen(txBuffer) );	
 }
@@ -894,7 +919,7 @@ void spiSendData(char* txBuffer, size_t bufferLength){
 	unsigned int txCount = 0;	
 	unsigned char c;
 	
-	SPI.beginTransaction(SPISettings(100000, MSBFIRST, SPI_MODE0));
+	SPI.beginTransaction(SPISettings(125000, MSBFIRST, SPI_MODE0));
 	
 	digitalWrite(SS_PIN,LOW);
 	for(txCount = 0;txCount < bufferLength;txCount++)//send whole buffer
@@ -902,10 +927,6 @@ void spiSendData(char* txBuffer, size_t bufferLength){
 		c = SPI.transfer(txBuffer[txCount]);//transfer and receive 1 char in SPI
 		delayMicroseconds(4);
 	}		
-	SPI.transfer(0x00);
-	SPI.transfer(0x00);
-	SPI.transfer(0x00);
-	SPI.transfer(0x00);
 	digitalWrite(SS_PIN,HIGH);
 	
 	SPI.endTransaction();
@@ -916,15 +937,14 @@ bool pollRx(char* buffer)
 {
 	unsigned int rxCount = 0;
 	unsigned char tempChar;	
-	resetBuffer(buffer,MAX_BUFFER);
+	resetBuffer(buffer,RX_MAX);
 	
-	SPI.beginTransaction(SPISettings(100000, MSBFIRST, SPI_MODE0));
+	SPI.beginTransaction(SPISettings(125000, MSBFIRST, SPI_MODE0));
 	
 	digitalWrite(SS_PIN,LOW);	
 	for(int i = 0;i<RX_DELAY;)
 	{
 		tempChar = SPI.transfer(0x00);
-		delayMicroseconds(4);
 		if(tempChar > 31)
 		{				
 			if(tempChar == ';' || tempChar == ']')
@@ -979,12 +999,12 @@ void convertFloatToString(char* destination,float value, int decPlace){//convert
 	{
 		value = value * -1;
 		convertedInt = value* power10[decPlace];
-		sprintf(destination,"-%lu|%d",convertedInt,decPlace);		
+		sprintf(destination,"-%lu|%d\0",convertedInt,decPlace);		
 	}
 	else
 	{
 		convertedInt = value* power10[decPlace];
-		sprintf(destination,"%lu|%d",convertedInt,decPlace);
+		sprintf(destination,"%lu|%d\0",convertedInt,decPlace);
 	}
 
 	

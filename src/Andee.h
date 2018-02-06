@@ -13,7 +13,8 @@ Author: Hasif
 #endif
 
 #define RX_DELAY 50
-#define MAX_BUFFER 256
+#define RX_MAX 100
+#define TX_MAX 128
 
 class AndeeClass
 {
