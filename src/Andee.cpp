@@ -58,7 +58,9 @@ void AndeeClass::clear(){
 
 void AndeeClass::setName(char* name){
 	andeeCommand = SET_ANDEE_NAME;
-	sendAndee(99,name);
+	char limit[32];
+	memcpy(limit,name,32);
+	sendAndee(99,limit);
 }
 
 void AndeeClass::getMACAddress(){
@@ -543,7 +545,9 @@ void AndeeHelper::requireAck(bool input){
 
 void AndeeHelper::setColor(const char* color){
 	andeeCommand = SET_COLOR;
-	sendAndee(id,color);
+	char limit[8];
+	memcpy(limit,color);
+	sendAndee(id,limit);
 }
 
 void AndeeHelper::setColor(const char color){
@@ -553,7 +557,9 @@ void AndeeHelper::setColor(const char color){
 
 void AndeeHelper::setTitleColor(const char* color){
 	andeeCommand = SET_TITLE_COLOR;
-	sendAndee(id,color);
+	char limit[8];
+	memcpy(limit,color);
+	sendAndee(id,limit);
 }
 
 void AndeeHelper::setTitleColor(const char color){
@@ -563,7 +569,9 @@ void AndeeHelper::setTitleColor(const char color){
 
 void AndeeHelper::setTitleTextColor(const char* color){
 	andeeCommand = SET_TITLE_TEXT_COLOR;
-	sendAndee(id,color);
+	char limit[8];
+	memcpy(limit,color);
+	sendAndee(id,limit);
 }
 
 void AndeeHelper::setTitleTextColor(const char color){
@@ -573,7 +581,9 @@ void AndeeHelper::setTitleTextColor(const char color){
 
 void AndeeHelper::setTextColor(const char* color){
 	andeeCommand = SET_TEXT_COLOR;
-	sendAndee(id,color);
+	char limit[8];
+	memcpy(limit,color);
+	sendAndee(id,limit);
 }
 
 void AndeeHelper::setTextColor(const char color){
@@ -916,7 +926,7 @@ void sendByteAndee(unsigned int id,unsigned char message){
  *****************************************************************************/
 void spiSendData(char* txBuffer, size_t bufferLength){
 	int i = 0;
-	unsigned int txCount = 0;	
+	unsigned int txCount = 0;
 	unsigned char c;
 	
 	SPI.beginTransaction(SPISettings(125000, MSBFIRST, SPI_MODE0));
@@ -926,7 +936,7 @@ void spiSendData(char* txBuffer, size_t bufferLength){
 	{		
 		c = SPI.transfer(txBuffer[txCount]);//transfer and receive 1 char in SPI
 		delayMicroseconds(4);
-	}		
+	}
 	digitalWrite(SS_PIN,HIGH);
 	
 	SPI.endTransaction();
