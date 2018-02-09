@@ -39,10 +39,7 @@ void AndeeClass::begin(){
     pinMode(MOSI, OUTPUT);
 	delay(500);
 	
-	memset(rxBuffer,0x00,RX_MAX);
-	
-	//andeeCommand = BEGIN;
-	//sendAndee(99,EMPTY);	
+	memset(rxBuffer,0x00,RX_MAX);	
 }
 
 void AndeeClass::begin(int pin){
@@ -58,9 +55,18 @@ void AndeeClass::clear(){
 
 void AndeeClass::setName(char* name){
 	andeeCommand = SET_ANDEE_NAME;
-	char limit[32];
-	memcpy(limit,name,32);
-	sendAndee(99,limit);
+	char limit[33];
+	if(strlen(name) > 32)
+	{
+		memcpy(limit,name,32);
+		limit[32] = '\0';
+		sendAndee(99,limit);
+	}
+	else
+	{
+		sendAndee(99,name);
+	}
+	delay(50);	
 }
 
 void AndeeClass::getMACAddress(){
@@ -224,9 +230,6 @@ void AndeeClass::getGravReading(float* x,float* y,float* z){
 		tempY = strtok(NULL,",");
 		tempZ = strtok(NULL, "");
 		
-		/* *x = atof(tempX);
-		*y = atof(tempY);
-		*z = atof(tempZ); */
 		*x = strtod (tempX, NULL);
 		*y = strtod (tempY, NULL);
 		*z = strtod (tempZ, NULL);
@@ -265,17 +268,25 @@ void AndeeClass::getGpsReading(float* x,float* y){
 		
 		*x = strtod (tempX, NULL);
 		*y = strtod (tempY, NULL);						
-	}	
-	
+	}		
 }
 
 void AndeeClass::sendSMS(char* number,char* message){
 	andeeCommand = SEND_SMS;
 	
 	char temp[90];
-	char limit[64];
-	memcpy(limit,message,64);	
-	sprintf(temp,"%s,%s\0",number,limit);
+	char limit[65];
+	
+	if(strlen(message) > 64)
+	{
+		memcpy(limit,message,64);	
+		limit[64] = '\0';
+		sprintf(temp,"%s,%s\0",number,limit);
+	}
+	else
+	{
+		sprintf(temp,"%s,%s\0",number,message);		
+	}
 	sendAndee(99,temp);
 }
 
@@ -294,8 +305,20 @@ void AndeeClass::takePhoto(char cameraType, char autoFocus, char flash){
 void AndeeClass::textToSpeech(char* speech, float speed, float pitch, char accent ){
 	andeeCommand = TEXT_TO_SPEECH;	
 	char temp[100];
-	char limit[64];
-	memcpy(limit,speech,64);
+	char limit[65];
+	
+	if(strlen(speech) > 64)
+	{
+		memcpy(limit,speech,64);
+		limit[64] = '\0';
+	}
+	else
+	{
+		memcpy(limit,speech,strlen(speech));
+		limit[strlen(speech)] = '\0';
+	}
+	
+	
 	int speedInt = speed * 10;
 	int pitchInt = pitch * 10;
 	sprintf(temp,"%s,%i,%i,%c\0",limit,speedInt,pitchInt,accent);	
@@ -306,12 +329,50 @@ void AndeeClass::textToSpeech(char* speech, float speed, float pitch, char accen
 void AndeeClass::notification(char* title,char* message, char* ticker){
 	andeeCommand = NOTIFICATION;
 	char temp[102];
-	char titleLimit[32];
-	char msgLimit[32];
-	char tickerLimit[32];
-	memcpy(titleLimit,title,32);
-	memcpy(msgLimit,message,32);
-	memcpy(tickerLimit,ticker,32);
+	char titleLimit[33];
+	char msgLimit[33];
+	char tickerLimit[33];
+	char titleLen;
+	char msgLen;
+	char tickerLen;
+	
+	titleLen = strlen(title);
+	msgLen = strlen(message);
+	tickerLen = strlen(ticker);
+
+	if(titleLen > 32)
+	{
+		memcpy(titleLimit,title,32);
+		titleLimit[32] = '\0';
+	}
+	else
+	{
+		memcpy(titleLimit,title,titleLen);
+		titleLimit[titleLen] = '\0';
+	}
+	
+	if(msgLen > 32)
+	{
+		memcpy(msgLimit,message,32);
+		msgLimit[32] = '\0';
+	}
+	else
+	{
+		memcpy(msgLimit,message,msgLen);
+		msgLimit[msgLen] = '\0';
+	}
+	
+	if(tickerLen > 32)
+	{
+		memcpy(tickerLimit,ticker,32);
+		tickerLimit[32] = '\0';
+	}
+	else
+	{
+		memcpy(tickerLimit,ticker,tickerLen);
+		tickerLimit[tickerLen] = '\0';
+	}	
+	
 	memset(temp,0x00,200);
 	sprintf(temp,"%s,%s,%s\0",titleLimit,msgLimit,tickerLimit);
 	
@@ -545,8 +606,9 @@ void AndeeHelper::requireAck(bool input){
 
 void AndeeHelper::setColor(const char* color){
 	andeeCommand = SET_COLOR;
-	char limit[8];
-	memcpy(limit,color);
+	char limit[9];
+	memcpy(limit,color,8);
+	limit[8] = '\0';
 	sendAndee(id,limit);
 }
 
@@ -557,8 +619,9 @@ void AndeeHelper::setColor(const char color){
 
 void AndeeHelper::setTitleColor(const char* color){
 	andeeCommand = SET_TITLE_COLOR;
-	char limit[8];
-	memcpy(limit,color);
+	char limit[9];
+	memcpy(limit,color,8);
+	limit[8] = '\0';
 	sendAndee(id,limit);
 }
 
@@ -569,8 +632,9 @@ void AndeeHelper::setTitleColor(const char color){
 
 void AndeeHelper::setTitleTextColor(const char* color){
 	andeeCommand = SET_TITLE_TEXT_COLOR;
-	char limit[8];
-	memcpy(limit,color);
+	char limit[9];
+	memcpy(limit,color,8);
+	limit[8] = '\0';
 	sendAndee(id,limit);
 }
 
@@ -581,8 +645,9 @@ void AndeeHelper::setTitleTextColor(const char color){
 
 void AndeeHelper::setTextColor(const char* color){
 	andeeCommand = SET_TEXT_COLOR;
-	char limit[8];
-	memcpy(limit,color);
+	char limit[9];
+	memcpy(limit,color,8);
+	limit[8] = '\0';
 	sendAndee(id,limit);
 }
 
@@ -593,14 +658,23 @@ void AndeeHelper::setTextColor(const char color){
 
 void AndeeHelper::setData(const char* data){
 	andeeCommand = SET_DATA;
-	char temp[64];
-	if(strlen(data) == 0)
+	char temp[65];
+	char dataLen;
+	
+	dataLen = strlen(data);
+	if(dataLen == 0)
 	{
-		data = "     \0";
+		sprintf(temp,"     \0");
+	}
+	else if(dataLen > 64)
+	{
+		memcpy(temp,data,64);
+		temp[64] = '\0';
 	}
 	else
 	{
-		memcpy(temp,data,64);
+		memcpy(temp,data,dataLen);
+		temp[dataLen] = '\0';
 	}
 	sendAndee(id,temp);
 }
@@ -623,14 +697,23 @@ void AndeeHelper::setData(float data,char decPlace){
 
 void AndeeHelper::setTitle(const char* title){
 	andeeCommand = SET_TITLE;
-	char temp[64];
+	char temp[65];
+	char titleLen;
+		
+	titleLen = strlen(title);
 	if(strlen(title) == 0)
 	{
-		title = "     \0";
+		sprintf(temp,"     \0");
+	}
+	else if(titleLen > 64)
+	{
+		memcpy(temp,title,64);
+		temp[64] = '\0';		
 	}
 	else
 	{
-		memcpy(temp,title,64);
+		memcpy(temp,title,titleLen);
+		temp[titleLen] = '\0';	
 	}
 	sendAndee(id,temp);
 }
@@ -653,14 +736,23 @@ void AndeeHelper::setTitle(float title, char decPlace){
 
 void AndeeHelper::setUnit(const char* unit){
 	andeeCommand = SET_UNIT;
-	char temp[64];
-	if(strlen(unit) == 0)
+	char temp[65];
+	char unitLen;
+	
+	unitLen = strlen(unit);
+	if(unitLen == 0)
 	{
 		unit = "     \0";
 	}
-	else
+	else if(unitLen > 64)
 	{
 		memcpy(temp,unit,64);
+		temp[64] = '\0';
+	}
+	else
+	{
+		memcpy(temp,unitLen,64);
+		temp[64] = '\0';
 	}
 	sendAndee(id,temp);
 }
