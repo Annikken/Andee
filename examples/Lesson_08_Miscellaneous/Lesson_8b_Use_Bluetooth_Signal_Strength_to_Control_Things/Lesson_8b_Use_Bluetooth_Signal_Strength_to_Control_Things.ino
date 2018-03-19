@@ -26,10 +26,7 @@ AndeeHelper displaybox;
 // We'll just light up an LED to demonstrate this
 // LED connected to Pin 2
 const int outputPin = 2;
-
-char strBuffer[30];
-char signalStr[4];
-int signalStrength;
+signed char signalStrength = 0;
 
 // The setup() function is meant to tell Arduino what to do 
 // only when it starts up.
@@ -60,12 +57,7 @@ void loop()
   if( Andee.isConnected() ) // Run only when connected
   {
     // Retrieve Bluetooth information from the Andee and store it in strBuffer
-    Andee.sendCommand("GET CONNECTED MAC_ID", strBuffer);
-    memcpy(signalStr, &strBuffer[18], 4); // Extract signal strength
-    signalStrength = atoi(signalStr); // Convert to int value
-
-    displaybox.setData(signalStrength);
-    displaybox.update();
+    signalStrength = Andee.getRSSI();    
 
     // We're gonna use a double threshold line to prevent light flickering.
     // If you use a single threshold, when you stand at the edge of the threshold
@@ -84,13 +76,14 @@ void loop()
       digitalWrite(outputPin, LOW);
     }    
     
+    displaybox.setData(signalStrength);
+    displaybox.update();
+    delay(300);    
   }
-  if( !Andee.isConnected() )
+  else
   {
     digitalWrite(outputPin, LOW); // Keep the LED off
   }
-
-  delay(500); // Always leave a short delay for Bluetooth communication
 }
 
 

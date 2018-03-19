@@ -81,15 +81,8 @@ signed char AndeeClass::getRSSI(){
 	if(pollRx(rxBuffer))
 	{
 		if(rxBuffer[0] == 'R')
-		{
-			if(rxBuffer[1] == 0x00)
-			{
-				return -59;
-			}				
-			else
-			{
-				return (-(rxBuffer[1]));
-			}
+		{			
+			return rxBuffer[1];
 		}
 		else
 		{
