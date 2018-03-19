@@ -12,7 +12,7 @@ Author: Hasif
 #include "itoa.h"
 #endif
 
-#define RX_DELAY 50
+#define RX_DELAY 15
 #define RX_MAX 100
 #define TX_MAX 128
 
@@ -37,6 +37,9 @@ class AndeeClass
 	
 	void getMACAddress();	
 	//Gets the MAC Address of the smartdevice connected to the Andee.(Android Only)
+	
+	signed char getRSSI();
+	//This function gets the RSSI of the smartdevice connected to the Annikken Andee board. Only works when connected to a device for obvious reasons. Will return a value between -103 to -38. If a device is not connected or an error has occurred, -128 will be returned.
 	
 	void disconnect();
 	//This forces the smartphone/tablet to dsconnect its BLE
@@ -321,11 +324,13 @@ void convertFloatToString(char*,float, int);
 enum//For All Andee Commands
 {
 /////////////////////Main Andee Functions//////////////////
+	PLACEHOLDER,
 	CLEAR_UI,//0
 	SET_ANDEE_NAME,
 	GET_MAC_ADDRESS,
+	GET_BLE_RSSI,
 	DISCONNECT,
-	CHECK_CONNECTION,
+	CHECK_CONNECTION,	
 /////////////////////DEVICE TIME,DATE,BATTERY//////////////////
 	GET_BATTERY_LEVEL,//5
 	GET_DEVICE_TIME,
@@ -372,20 +377,18 @@ enum//For All Andee Commands
 	SHOW_SCREEN,
 	HIDE_SCREEN,
 	TEXT_INPUT,
-
-
 /////////////////////////ANDEEHELPER FUNCTIONS/////////////////////////////////
 	SET_ID,
 
 	SET_TYPE,//40
-	
+
 	SET_LOCATION,
 	SET_COORD,
 
 	SET_INPUT_MODE,
 
 	SET_COLOR,
-    SET_TEXT_COLOR,//45
+        SET_TEXT_COLOR,//45
 	SET_TITLE_COLOR,
 	SET_TITLE_TEXT_COLOR,
 
@@ -398,7 +401,7 @@ enum//For All Andee Commands
 
 	SET_MIN_MAX,
 	SET_MIN_MAX_FLOAT,//55
-	
+
 	SET_SLIDER_NUM_INTERVALS,
 	MOVE_SLIDER_TO_VALUE,
 	GET_SLIDER_VALUE,

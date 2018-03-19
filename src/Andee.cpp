@@ -37,7 +37,7 @@ void AndeeClass::begin(){
 	SPI.begin();
 	pinMode(SCK, OUTPUT);
     pinMode(MOSI, OUTPUT);
-	delay(500);
+	delay(800);
 	
 	memset(rxBuffer,0x00,RX_MAX);	
 }
@@ -66,12 +66,40 @@ void AndeeClass::setName(char* name){
 	{
 		sendAndee(99,name);
 	}
-	delay(50);	
+	delay(100);	
 }
 
 void AndeeClass::getMACAddress(){
 	andeeCommand = GET_MAC_ADDRESS;
 	sendAndee(99,EMPTY);
+}
+
+signed char AndeeClass::getRSSI(){
+	andeeCommand = GET_BLE_RSSI;
+	sendAndee(99,EMPTY);
+	
+	if(pollRx(rxBuffer))
+	{
+		if(rxBuffer[0] == 'R')
+		{
+			if(rxBuffer[1] == 0x00)
+			{
+				return -59;
+			}				
+			else
+			{
+				return (-(rxBuffer[1]));
+			}
+		}
+		else
+		{
+			return -127;
+		}
+	}
+	else
+	{
+		return -127;
+	}
 }
 
 void AndeeClass::disconnect(){
@@ -798,13 +826,16 @@ void AndeeHelper::setMinMax(float min,float max,char decPlace){
 void AndeeHelper::setSliderNumIntervals(int numInterval){
 	andeeCommand = SET_SLIDER_NUM_INTERVALS;
 	char temp;
-	if(numInterval < 223)
+	if(numInterval <= 223 && numInterval >= 0)
 	{
 		temp = numInterval + 32;
 	}
-	else
+	else if(numInterval > 223) 
 	{
 		temp = 255;
+	}else if (numInterval <= 0)
+	{
+		temp = 0;
 	}
 	sendByteAndee(id,temp);
 }
@@ -1021,7 +1052,7 @@ void spiSendData(char* txBuffer, size_t bufferLength){
 	unsigned int txCount = 0;
 	unsigned char c;
 	
-	SPI.beginTransaction(SPISettings(125000, MSBFIRST, SPI_MODE0));
+	SPI.beginTransaction(SPISettings(500000, MSBFIRST, SPI_MODE0));
 	
 	digitalWrite(SS_PIN,LOW);
 	for(txCount = 0;txCount < bufferLength;txCount++)//send whole buffer
@@ -1041,7 +1072,7 @@ bool pollRx(char* buffer)
 	unsigned char tempChar;	
 	resetBuffer(buffer,RX_MAX);
 	
-	SPI.beginTransaction(SPISettings(125000, MSBFIRST, SPI_MODE0));
+	SPI.beginTransaction(SPISettings(500000, MSBFIRST, SPI_MODE0));
 	
 	digitalWrite(SS_PIN,LOW);	
 	for(int i = 0;i<RX_DELAY;)
