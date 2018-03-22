@@ -998,6 +998,7 @@ void AndeeHelper::ack(){
 
 void AndeeHelper::update(){
 	update(0);
+	delay(50);
 }
 void AndeeHelper::update(int loop){
 	andeeCommand = UPDATE;
@@ -1051,7 +1052,7 @@ void spiSendData(char* txBuffer, size_t bufferLength){
 	for(txCount = 0;txCount < bufferLength;txCount++)//send whole buffer
 	{		
 		c = SPI.transfer(txBuffer[txCount]);//transfer and receive 1 char in SPI
-		delayMicroseconds(4);
+		delayMicroseconds(20);
 	}
 	digitalWrite(SS_PIN,HIGH);
 	
@@ -1065,7 +1066,7 @@ bool pollRx(char* buffer)
 	unsigned char tempChar;	
 	resetBuffer(buffer,RX_MAX);
 	
-	SPI.beginTransaction(SPISettings(1000000, MSBFIRST, SPI_MODE0));
+	SPI.beginTransaction(SPISettings(500000, MSBFIRST, SPI_MODE0));
 	
 	digitalWrite(SS_PIN,LOW);	
 	for(int i = 0;i<RX_DELAY;)
