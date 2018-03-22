@@ -772,8 +772,8 @@ void AndeeHelper::setUnit(const char* unit){
 	}
 	else
 	{
-		memcpy(temp,unitLen,64);
-		temp[64] = '\0';
+		memcpy(temp,unit,unitLen);
+		temp[unitLen] = '\0';
 	}
 	sendAndee(id,temp);
 }
@@ -1065,7 +1065,7 @@ bool pollRx(char* buffer)
 	unsigned char tempChar;	
 	resetBuffer(buffer,RX_MAX);
 	
-	SPI.beginTransaction(SPISettings(500000, MSBFIRST, SPI_MODE0));
+	SPI.beginTransaction(SPISettings(1000000, MSBFIRST, SPI_MODE0));
 	
 	digitalWrite(SS_PIN,LOW);	
 	for(int i = 0;i<RX_DELAY;)
