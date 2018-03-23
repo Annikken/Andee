@@ -1077,7 +1077,7 @@ bool pollRx(char* buffer)
 		{				
 			if(tempChar == ';' || tempChar == ']')
 			{
-				Serial.print("pollRx:");Serial.println(buffer);
+				//Serial.print("pollRx:");Serial.println(buffer);
 				buffer[rxCount] = '\0';
 				
 				digitalWrite(SS_PIN,HIGH);
