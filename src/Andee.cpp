@@ -1018,6 +1018,7 @@ void AndeeHelper::update(int loop){
 void AndeeHelper::remove(){
 	andeeCommand = REMOVE;
 	sendAndee(id,EMPTY);
+	delay(50);
 }
 
 
