@@ -266,6 +266,7 @@ class AndeeHelper
 	
 	//void setKeyboardType(char);
 	void getKeyboardMessage(char*);
+	void getKeyboardMessage(char*,size_t);
 	//This function returns the sentence or phrase typed into the smartphone/tablet in the KYBOARD_IN function
 	
 	void setDefaultDate(int,int,int);

@@ -913,7 +913,22 @@ void AndeeHelper::getKeyboardMessage(char* message){
 	{
 		if(id == rxBuffer[0] - 32)
 		{
-			strcpy(message,rxBuffer + 2);
+			memcpy(message,rxBuffer + 2,32);
+			message[31] = '\0';
+		}	
+	}
+}
+
+void AndeeHelper::getKeyboardMessage(char* message, size_t number){
+	andeeCommand = GET_KEYBOARD_MSG;
+	sendAndee(id,EMPTY);
+	
+	if(pollRx(rxBuffer))
+	{
+		if(id == rxBuffer[0] - 32)
+		{
+			memcpy(message,rxBuffer + 2,number);
+			message[number - 1] = '\0';
 		}	
 	}	
 }
