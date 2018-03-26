@@ -318,6 +318,7 @@ void sendByteAndee(unsigned int,unsigned char);
 void spiSendData(char*, size_t);
 bool pollRx(char*);
 void resetBuffer(char*,unsigned int);
+void resetRX(void);
 
 void convertFloatToString(char*,float, int);
     

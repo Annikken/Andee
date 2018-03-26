@@ -547,7 +547,7 @@ void AndeeHelper::setLocation(char row, char order, char span){
 			w =44;
 			break;	
 		default:
-			Serial.println("Andee UI Span ERROR");
+			//Serial.println("Andee UI Span ERROR");
 			break;
 	}
 	
@@ -862,8 +862,15 @@ bool AndeeHelper::getSliderValue(int* value,int type){
 	{
 		if(type == INT)
 		{
-			*value = atoi(rxBuffer);
-			return true;
+			if(id == rxBuffer[0]-32)
+			{
+				*value = atoi(rxBuffer+2);
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}		
 	}	
 	else
@@ -880,8 +887,16 @@ bool AndeeHelper::getSliderValue(float* value,float type){
 	{
 		if(type == FLOAT)
 		{
-			*value = atof(rxBuffer);
-			return true;
+			if(id == rxBuffer[0]-32)
+			{
+				*value = atof(rxBuffer+2);
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+			
 		}		
 	}	
 	else
@@ -896,7 +911,10 @@ void AndeeHelper::getKeyboardMessage(char* message){
 	
 	if(pollRx(rxBuffer))
 	{
-		strcpy(message,rxBuffer);
+		if(id == rxBuffer[0] - 32)
+		{
+			strcpy(message,rxBuffer + 2);
+		}	
 	}	
 }
 
@@ -915,25 +933,28 @@ void AndeeHelper::getDateInput(int* d,int* m, int* y){
 	char month[3];
 	char year[5];
 	
-	if(pollRx(rxBuffer))
+	if(pollRx(rxBuffer))		
 	{
-		day[0] = rxBuffer[0];
-		day[1] = rxBuffer[1];
-		day[2] = '\0';
-		
-		month[0] = rxBuffer[2];
-		month[1] = rxBuffer[3];
-		month[2] = '\0';
-		
-		year[0] = rxBuffer[4];
-		year[1] = rxBuffer[5];
-		year[2] = rxBuffer[6];
-		year[3] = rxBuffer[7];
-		year[4] = '\0';
-		
-		*d = atoi(day);
-		*m = atoi(month);
-		*y = atoi(year);
+		if(id == rxBuffer[0] - 32)
+		{
+			day[0] = rxBuffer[2];
+			day[1] = rxBuffer[3];
+			day[2] = '\0';
+			
+			month[0] = rxBuffer[4];
+			month[1] = rxBuffer[5];
+			month[2] = '\0';
+			
+			year[0] = rxBuffer[6];
+			year[1] = rxBuffer[7];
+			year[2] = rxBuffer[8];
+			year[3] = rxBuffer[9];
+			year[4] = '\0';
+			
+			*d = atoi(day);
+			*m = atoi(month);
+			*y = atoi(year);
+		}
 	}
 	
 }
@@ -957,21 +978,24 @@ void AndeeHelper::getTimeInput(int* h,int* m,int* s){
 	
 	if(pollRx(rxBuffer))
 	{
-		hour[0] = rxBuffer[0];
-		hour[1] = rxBuffer[1];
-		hour[2] = '\0';
-		
-		minute[0] = rxBuffer[2];
-		minute[1] = rxBuffer[3];
-		minute[2] = '\0';
-		
-		second[0] = rxBuffer[4];
-		second[1] = rxBuffer[5];
-		second[2] = '\0';
-		
-		*h = atoi(hour);
-		*m = atoi(minute);
-		*s = atoi(second);
+		if(id == rxBuffer[0] - 32)
+		{
+			hour[0] = rxBuffer[2];
+			hour[1] = rxBuffer[3];
+			hour[2] = '\0';
+			
+			minute[0] = rxBuffer[4];
+			minute[1] = rxBuffer[5];
+			minute[2] = '\0';
+			
+			second[0] = rxBuffer[6];
+			second[1] = rxBuffer[7];
+			second[2] = '\0';
+			
+			*h = atoi(hour);
+			*m = atoi(minute);
+			*s = atoi(second);
+		}
 	}
 }
 
@@ -991,7 +1015,7 @@ int AndeeHelper::isPressed(){
 
 void AndeeHelper::ack(){
 	andeeCommand = ACKNOWLEDGE;
-	delay(5);
+	delay(50);
 	sendAndee(id,EMPTY);
 }
 
@@ -1053,7 +1077,7 @@ void spiSendData(char* txBuffer, size_t bufferLength){
 	for(txCount = 0;txCount < bufferLength;txCount++)//send whole buffer
 	{		
 		c = SPI.transfer(txBuffer[txCount]);//transfer and receive 1 char in SPI
-		delayMicroseconds(20);
+		delayMicroseconds(40);
 	}
 	digitalWrite(SS_PIN,HIGH);
 	
@@ -1065,7 +1089,7 @@ bool pollRx(char* buffer)
 {
 	unsigned int rxCount = 0;
 	unsigned char tempChar;	
-	resetBuffer(buffer,RX_MAX);
+	resetRX();
 	
 	SPI.beginTransaction(SPISettings(500000, MSBFIRST, SPI_MODE0));
 	
@@ -1089,6 +1113,7 @@ bool pollRx(char* buffer)
 			}
 			else if(tempChar == 173)
 			{
+				//Serial.println("pollRx: No Reply");
 				digitalWrite(SS_PIN,HIGH);
 				SPI.endTransaction();
 				
@@ -1108,13 +1133,18 @@ bool pollRx(char* buffer)
 	}	
 	digitalWrite(SS_PIN,HIGH);
 	
-	SPI.endTransaction ();
+	SPI.endTransaction();
 	delay(5);	
 }
 
 void resetBuffer(char* buffer,unsigned int length)
 {
 	memset(buffer,0x00,length);
+}
+
+void resetRX()
+{
+	memset(rxBuffer,0x00,RX_MAX);
 }
 
 
