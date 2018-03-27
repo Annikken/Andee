@@ -41,6 +41,7 @@ void setup()
 {
   sliderPosA = 128; // Just some arbitary values for demo purposes
   sliderPosB = 50.0;
+  sliderTotal = sliderPosA + sliderPosB;
   Andee.begin();  // Setup communication between Annikken Andee and Arduino
   Andee.clear();  // Clear the screen of any previous displays
   Andee.setName("Slider Demo");    
@@ -105,13 +106,13 @@ void setInitialData()
   sliderDisplay.setLocation(3,0,FULL);
   sliderDisplay.setTitle("Sum of the Two Sliders");
   sliderDisplay.setSliderMinMax(0, 300, 2); // Display 2 decimal places
-  sliderDisplay.setSliderInitialValue(150);  // Set slider position to 178
+  sliderDisplay.setSliderInitialValue(sliderTotal);  // Set slider position to 178
   sliderDisplay.setSliderNumIntervals(0); // Set to 0 for continuous slider
 }
 
 // Arduino will run instructions here repeatedly until you power it off.
 void loop()
-{ 
+{
   if(sliderDiscrete.getSliderValue(&sliderPosA,INT))//only update sliderTotal if there is new data at getSliderValue
   {
     sliderTotal = (float)(sliderPosA) + sliderPosB;
@@ -122,10 +123,8 @@ void loop()
     sliderTotal = (float)(sliderPosA) + sliderPosB;
   } 
 
-  sliderDisplay.moveSliderToValue(sliderTotal,2);//2 represents the number of decimal place needed
-  sliderDisplay.update();
-  delay(300);//The delays can be split for better efficiency
-  
+  sliderTotal = sliderPosA + sliderPosB;  
+
   if(sliderTotal >= 200) // You can even get it to update its colour
   {
     sliderDisplay.setActiveColor(THEME_GREEN_DARK);
@@ -144,11 +143,18 @@ void loop()
 
   if( buttonResetPosition.isPressed() )
   {
+    sliderPosA = 128;
+    sliderPosB = 50;
+    sliderTotal = sliderPosA + sliderPosB;
     buttonResetPosition.ack();
-    sliderDiscrete.moveSliderToValue(128);
-    sliderContinuous.moveSliderToValue(50);
+    
+    sliderDiscrete.moveSliderToValue(sliderPosA);
+    sliderContinuous.moveSliderToValue(sliderPosB);
   }
-  
+
+  sliderDisplay.moveSliderToValue(sliderTotal,2);//2 represents the number of decimal place needed
+
+  sliderDisplay.update();
   sliderDiscrete.update();
   sliderContinuous.update();
   buttonResetPosition.update();

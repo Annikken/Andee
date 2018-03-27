@@ -1019,7 +1019,7 @@ int AndeeHelper::isPressed(){
 	sendAndee(id,EMPTY);
 	
 	pollRx(rxBuffer);
-	if(rxBuffer[1] == ',')
+	if( (id == (rxBuffer[0] - 32)) && (rxBuffer[1] == ',') )
 	{
 		return (rxBuffer[2] - 48);
 	}
