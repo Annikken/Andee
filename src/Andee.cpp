@@ -23,7 +23,8 @@ char txBuffer[TX_MAX];
 char rxBuffer[RX_MAX];
 char rxCount = 0;
 
-unsigned char EMPTY[3] = {'N','A','\0'};
+char EMPTY[3] = {'N','A','\0'};
+AndeeClass Andee;
 
 ///////////////////////ANDEECLASS///////////////////
 /////////////////////Main Andee Functions//////////////////
@@ -53,18 +54,18 @@ void AndeeClass::clear(){
 	sendAndee(99,EMPTY);
 }
 
-void AndeeClass::setName(char* name){
+void AndeeClass::setName(const char* name){
 	andeeCommand = SET_ANDEE_NAME;
 	char limit[33];
 	if(strlen(name) > 32)
 	{
 		memcpy(limit,name,32);
 		limit[32] = '\0';
-		sendAndee(99,limit);
+		sendAndee(99,(char*)limit);
 	}
 	else
 	{
-		sendAndee(99,name);
+		sendAndee(99,(char*)name);
 	}
 	delay(100);	
 }
@@ -633,10 +634,10 @@ void AndeeHelper::setColor(const char* color){
 	sendAndee(id,limit);
 }
 
-void AndeeHelper::setColor(const char color){
+/* void AndeeHelper::setColor(const char color){
 	andeeCommand = SET_COLOR;
 	sendAndee(id,color);
-}
+} */
 
 void AndeeHelper::setTitleColor(const char* color){
 	andeeCommand = SET_TITLE_COLOR;
@@ -646,10 +647,10 @@ void AndeeHelper::setTitleColor(const char* color){
 	sendAndee(id,limit);
 }
 
-void AndeeHelper::setTitleColor(const char color){
+/* void AndeeHelper::setTitleColor(const char color){
 	andeeCommand = SET_TITLE_COLOR;
 	sendAndee(id,color);
-}
+} */
 
 void AndeeHelper::setTitleTextColor(const char* color){
 	andeeCommand = SET_TITLE_TEXT_COLOR;
@@ -659,10 +660,10 @@ void AndeeHelper::setTitleTextColor(const char* color){
 	sendAndee(id,limit);
 }
 
-void AndeeHelper::setTitleTextColor(const char color){
+/* void AndeeHelper::setTitleTextColor(const char color){
 	andeeCommand = SET_TITLE_TEXT_COLOR;
 	sendAndee(id,color);
-}
+} */
 
 void AndeeHelper::setTextColor(const char* color){
 	andeeCommand = SET_TEXT_COLOR;
@@ -672,10 +673,10 @@ void AndeeHelper::setTextColor(const char* color){
 	sendAndee(id,limit);
 }
 
-void AndeeHelper::setTextColor(const char color){
+/* void AndeeHelper::setTextColor(const char color){
 	andeeCommand = SET_TEXT_COLOR;
 	sendAndee(id,color);
-}
+} */
 
 void AndeeHelper::setData(const char* data){
 	andeeCommand = SET_DATA;
@@ -1064,13 +1065,13 @@ void AndeeHelper::remove(){
 /****************************************************************************
  * Functions to pack and send commands to PIC32
  *****************************************************************************/
-void sendAndee(unsigned int id,unsigned char* message){
+void sendAndee(unsigned int id,char* message){
 	memset(txBuffer,0x00,TX_MAX);
 	sprintf(txBuffer,"#%d#%d#%s;\0",id,andeeCommand,message);	
 	
 	spiSendData( txBuffer,strlen(txBuffer) );	
 }
-void sendByteAndee(unsigned int id,unsigned char message){
+void sendByteAndee(unsigned int id,char message){
 	memset(txBuffer,0x00,TX_MAX);
 	sprintf(txBuffer,"#%d#%d#%c;\0",id,andeeCommand,message);
 	

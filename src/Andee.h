@@ -22,8 +22,6 @@ class AndeeClass
 	
 	public:
 /////////////////////Main Andee Functions//////////////////
-
-	AndeeClass();
 	
 	void begin();
 	void begin(int);
@@ -32,7 +30,7 @@ class AndeeClass
 	void clear();
 	//This function clears the dashboard on the screen of the smartphone/tablet.
 	
-	void setName(char*);
+	void setName(const char*);
 	//This function allows you to change the Andee name
 	
 	void getMACAddress();	
@@ -193,19 +191,19 @@ class AndeeHelper
 	void requireAck(bool);
 	
 	void setColor(const char*);
-	void setColor(const char);
+	//void setColor(const char);
 	//This function is to store the background color into the appropriate buffer
 	
 	void setTitleColor(const char*);
-	void setTitleColor(const char);
+	//void setTitleColor(const char);
 	//This function is to store the title background color into the appropriate buffer
 	
 	void setTitleTextColor(const char*);
-	void setTitleTextColor(const char);
+	//void setTitleTextColor(const char);
 	//This function is to store the title font color into the appropriate buffer
 	
 	void setTextColor(const char*);
-	void setTextColor(const char);
+	//void setTextColor(const char);
 	//This function is to store the font color into the appropriate buffer
 	
 	void setData(const char*);
@@ -314,8 +312,8 @@ class AndeeHelper
 };
 
 
-void sendAndee(unsigned int,unsigned char*);
-void sendByteAndee(unsigned int,unsigned char);
+void sendAndee(unsigned int,char*);
+void sendByteAndee(unsigned int,char);
 void spiSendData(char*, size_t);
 bool pollRx(char*);
 void resetBuffer(char*,unsigned int);
