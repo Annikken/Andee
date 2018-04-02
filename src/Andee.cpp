@@ -468,34 +468,34 @@ void AndeeHelper::setLocation(char row, char order, char span){
 		case ONE_THIRD:
 			if(order == 0)
 			{
-				x = 2;
+				x = 4;
 				w = 30;
 			}
 			else if(order == 1)
 			{
-				x = 34;
-				w = 32;
+				x = 35;
+				w = 30;
 			}
 			else if(order == 2)
 			{
-				x = 68;
+				x = 66;
 				w = 30;
 			}
 			break;
 		case TWO_THIRD:
 			if(order == 0)
 			{
-				x = 2;
+				x = 4;
 			}
 			else if(order == 1)
 			{
-				x = 34;
+				x = 35;
 			}
 			else if(order == 2)
 			{
-				x = 68;
+				x = 66;
 			}
-			w = 64;
+			w = 61;
 			break;
 		case FULL:
 			x = 4;
