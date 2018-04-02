@@ -295,7 +295,7 @@ class AndeeHelper
 	
 	void update(void);
 	//This function is very important. If this function is not called, the widget will not appear
-	void update(int);
+	void update(unsigned int);
     
 	void remove();	
 	//This function is used to remove the widget. This is useful in situations where only 1 or more widgets needs to be changed. No arguments needed		
@@ -448,13 +448,13 @@ enum//For All Andee Commands
 /*************************************************************
  *********       ORIENTATION MACROS      *********************
  ************************************************************/
-#define AUTO 0
+/* #define AUTO 0
 #define AUTO_PORTRAIT 1
 #define AUTO_LANDSCAPE 2
 #define PORTRAIT 3
 #define PORTRAIT_REVERSE 4
 #define LANDSCAPE 5
-#define LANDSCAPE_REVERSE 6    
+#define LANDSCAPE_REVERSE 6    */ 
     
 /*************************************************************
  **************      CONNECTION MACROS      ******************

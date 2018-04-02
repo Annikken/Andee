@@ -127,16 +127,52 @@ int AndeeClass::isConnected(){
 void AndeeClass::getDeviceTime(int* h,int* m, int* s){
 	andeeCommand = GET_DEVICE_TIME;
 	sendAndee(99,EMPTY);
+	
+	char* tempH;
+	char* tempM;
+	char* tempS;
+	
+	if(pollRx(rxBuffer))
+	{
+		tempH = strtok(rxBuffer,",");
+		tempM = strtok(NULL,",");
+		tempS = strtok(NULL, "");
+		
+		*h = strtod (tempH, NULL);
+		*m = strtod (tempM, NULL);
+		*s = strtod (tempS, NULL);		
+	}
 }
 
 void AndeeClass::getDeviceDate(int* d, int* m, int* y){
 	andeeCommand = GET_DEVICE_DATE;
 	sendAndee(99,EMPTY);
+	
+	char* tempD;
+	char* tempM;
+	char* tempY;
+	
+	if(pollRx(rxBuffer))
+	{
+		tempD = strtok(rxBuffer,",");
+		tempM = strtok(NULL,",");
+		tempY = strtok(NULL, "");
+		
+		*d = strtod (tempD, NULL);
+		*m = strtod (tempM, NULL);
+		*y = strtod (tempY, NULL);		
+	}
 }
 
 long AndeeClass::getDeviceTimeStamp(){
 	andeeCommand = GET_DEVICE_TIMESTAMP;
 	sendAndee(99,EMPTY);
+	
+	if(pollRx(rxBuffer))
+	{
+		return atol(rxBuffer);		
+	}
+	return -10000;
 }
 ///////////////////////////PHONE SENSORS & PERIPHERAL/////////////////////////
 void AndeeClass::vibrate(){
@@ -148,7 +184,7 @@ void AndeeClass::gyroInit(int interval, int iteration){
 	andeeCommand = GYRO_INIT;	
 	
 	char temp[14];
-	char len;	
+	unsigned int len;	
 	itoa(interval, temp, 10);
 	len = strlen(temp);
     temp[len] = ',';
@@ -186,7 +222,7 @@ void AndeeClass::lacInit(int interval, int iteration){
 	andeeCommand = LAC_INIT;
 	
 	char temp[14];
-	char len;	
+	unsigned int len;	
 	itoa(interval, temp, 10);
 	len = strlen(temp);
     temp[len] = ',';
@@ -223,7 +259,7 @@ void AndeeClass::gravInit(int interval, int iteration){
 	andeeCommand = GRAV_INIT;
 	
 	char temp[14];
-	char len;	
+	unsigned int len;	
 	itoa(interval, temp, 10);
 	len = strlen(temp);
     temp[len] = ',';
@@ -244,7 +280,7 @@ void AndeeClass::getGravReading(float* x,float* y,float* z){
 	char* tempX;
 	char* tempY;
 	char* tempZ;	
-	char* pEnd;
+	//char* pEnd;
 	
 	if(pollRx(rxBuffer))
 	{
@@ -262,7 +298,7 @@ void AndeeClass::gpsInit(int interval, int iteration){
 	andeeCommand = GPS_INIT;
 	
 	char temp[14];
-	char len;	
+	unsigned int len;	
 	itoa(interval, temp, 10);
 	len = strlen(temp);
     temp[len] = ',';
@@ -303,11 +339,11 @@ void AndeeClass::sendSMS(char* number,char* message){
 	{
 		memcpy(limit,message,64);	
 		limit[64] = '\0';
-		sprintf(temp,"%s,%s\0",number,limit);
+		sprintf(temp,"%s,%s",number,limit);
 	}
 	else
 	{
-		sprintf(temp,"%s,%s\0",number,message);		
+		sprintf(temp,"%s,%s",number,message);		
 	}
 	sendAndee(99,temp);
 }
@@ -343,7 +379,7 @@ void AndeeClass::textToSpeech(char* speech, float speed, float pitch, char accen
 	
 	int speedInt = speed * 10;
 	int pitchInt = pitch * 10;
-	sprintf(temp,"%s,%i,%i,%c\0",limit,speedInt,pitchInt,accent);	
+	sprintf(temp,"%s,%i,%i,%c",limit,speedInt,pitchInt,accent);	
 	
 	sendAndee(99,temp);
 }
@@ -354,9 +390,9 @@ void AndeeClass::notification(char* title,char* message, char* ticker){
 	char titleLimit[33];
 	char msgLimit[33];
 	char tickerLimit[33];
-	char titleLen;
-	char msgLen;
-	char tickerLen;
+	unsigned int titleLen;
+	unsigned int msgLen;
+	unsigned int tickerLen;
 	
 	titleLen = strlen(title);
 	msgLen = strlen(message);
@@ -396,7 +432,7 @@ void AndeeClass::notification(char* title,char* message, char* ticker){
 	}	
 	
 	memset(temp,0x00,200);
-	sprintf(temp,"%s,%s,%s\0",titleLimit,msgLimit,tickerLimit);
+	sprintf(temp,"%s,%s,%s",titleLimit,msgLimit,tickerLimit);
 	
 	sendAndee(99,temp);
 }
@@ -444,9 +480,10 @@ void AndeeHelper::setLocation(char row, char order, char span){
 	andeeCommand = SET_COORD;//set location is changed to output like using setCoord
 	
 	char temp[6];
-	int x,y,w,h;
-	
-	h = 20;
+	unsigned int x = 0;
+	unsigned int y = 0;
+	unsigned int w = 0;
+	unsigned int h = 20;	
 	
 	if(row == 0)
 	{
@@ -563,6 +600,7 @@ void AndeeHelper::setLocation(char row, char order, char span){
 
 void AndeeHelper::setCoord(int x, int y, int w, int h){
 	andeeCommand = SET_COORD;
+	
 	
 	if(x < SCREEN_LOWER_LIMIT)
 	{
@@ -681,12 +719,12 @@ void AndeeHelper::setTextColor(const char* color){
 void AndeeHelper::setData(const char* data){
 	andeeCommand = SET_DATA;
 	char temp[65];
-	char dataLen;
+	unsigned int dataLen;
 	
 	dataLen = strlen(data);
 	if(dataLen == 0)
 	{
-		sprintf(temp,"     \0");
+		sprintf(temp,"     ");
 	}
 	else if(dataLen > 64)
 	{
@@ -704,7 +742,7 @@ void AndeeHelper::setData(const char* data){
 void AndeeHelper::setData(int data){
 	andeeCommand = SET_DATA;
 	char temp[13];
-	sprintf(temp,"%d\0",data);
+	sprintf(temp,"%d",data);
 	sendAndee(id,temp);
 }
 
@@ -720,12 +758,12 @@ void AndeeHelper::setData(float data,char decPlace){
 void AndeeHelper::setTitle(const char* title){
 	andeeCommand = SET_TITLE;
 	char temp[65];
-	char titleLen;
+	unsigned int titleLen;
 		
 	titleLen = strlen(title);
 	if(strlen(title) == 0)
 	{
-		sprintf(temp,"     \0");
+		sprintf(temp,"     ");
 	}
 	else if(titleLen > 64)
 	{
@@ -743,7 +781,7 @@ void AndeeHelper::setTitle(const char* title){
 void AndeeHelper::setTitle(int title){
 	andeeCommand = SET_TITLE;
 	char temp[13];
-	sprintf(temp,"%d\0",title);
+	sprintf(temp,"%d",title);
 	sendAndee(id,temp);
 }
 
@@ -759,12 +797,12 @@ void AndeeHelper::setTitle(float title, char decPlace){
 void AndeeHelper::setUnit(const char* unit){
 	andeeCommand = SET_UNIT;
 	char temp[65];
-	char unitLen;
+	unsigned int unitLen;
 	
 	unitLen = strlen(unit);
 	if(unitLen == 0)
 	{
-		unit = "     \0";
+		unit = "     ";
 	}
 	else if(unitLen > 64)
 	{
@@ -782,7 +820,7 @@ void AndeeHelper::setUnit(const char* unit){
 void AndeeHelper::setUnit(int unit){
 	andeeCommand = SET_UNIT;
 	char temp[13];
-	sprintf(temp,"%d\0",unit);
+	sprintf(temp,"%d",unit);
 	sendAndee(id,temp);
 }
 
@@ -799,7 +837,7 @@ void AndeeHelper::setMinMax(int min, int max){
 	andeeCommand = SET_MIN_MAX;
 	
 	char temp[23];
-	sprintf(temp,"%d,%d\0",min,max);
+	sprintf(temp,"%d,%d",min,max);
 	sendAndee(id,temp);
 }
 
@@ -812,7 +850,7 @@ void AndeeHelper::setMinMax(float min,float max,char decPlace){
 	convertFloatToString(minF,min,decPlace);
 	convertFloatToString(maxF,max,decPlace);
 	
-	sprintf(temp,"%s,%s\0",minF,maxF);
+	sprintf(temp,"%s,%s",minF,maxF);
 	
 	sendAndee(id,temp);
 }
@@ -874,10 +912,9 @@ bool AndeeHelper::getSliderValue(int* value,int type){
 			}
 		}		
 	}	
-	else
-	{
-		return false;
-	}
+	
+	return false;
+	
 }
 
 bool AndeeHelper::getSliderValue(float* value,float type){
@@ -900,10 +937,9 @@ bool AndeeHelper::getSliderValue(float* value,float type){
 			
 		}		
 	}	
-	else
-	{
-		return false;
-	}
+	
+	return false;
+	
 }
 
 void AndeeHelper::getKeyboardMessage(char* message){
@@ -938,7 +974,7 @@ void AndeeHelper::setDefaultDate(int day, int month, int year){
 	andeeCommand = SET_DEFAULT_DATE;
 	
 	char temp[12];
-	sprintf(temp,"%02i%02i%04i\0", day%31, month%12, year);
+	sprintf(temp,"%02i%02i%04i", day%31, month%12, year);
 	sendAndee(id,temp);
 }
 
@@ -979,7 +1015,7 @@ void AndeeHelper::setDefaultTime(int hour,int min, int sec){
 	andeeCommand = SET_DEFAULT_TIME;
 	
 	char temp[10];
-	sprintf(temp,"%02i%02i%02i\0", hour%24, min%60, sec%60);
+	sprintf(temp,"%02i%02i%02i", hour%24, min%60, sec%60);
 	
 	sendAndee(id,temp);
 }
@@ -1040,7 +1076,7 @@ void AndeeHelper::update(){
 	update(0);
 	delay(50);
 }
-void AndeeHelper::update(int loop){
+void AndeeHelper::update(unsigned int loop){
 	andeeCommand = UPDATE;
 		
 	if(loop == 0 || loop == updateLoop)
@@ -1067,13 +1103,13 @@ void AndeeHelper::remove(){
  *****************************************************************************/
 void sendAndee(unsigned int id,char* message){
 	memset(txBuffer,0x00,TX_MAX);
-	sprintf(txBuffer,"#%d#%d#%s;\0",id,andeeCommand,message);	
+	sprintf(txBuffer,"#%d#%d#%s;",id,andeeCommand,message);	
 	
 	spiSendData( txBuffer,strlen(txBuffer) );	
 }
 void sendByteAndee(unsigned int id,char message){
 	memset(txBuffer,0x00,TX_MAX);
-	sprintf(txBuffer,"#%d#%d#%c;\0",id,andeeCommand,message);
+	sprintf(txBuffer,"#%d#%d#%c;",id,andeeCommand,message);
 	
 	spiSendData( txBuffer,strlen(txBuffer) );	
 }
@@ -1083,16 +1119,14 @@ void sendByteAndee(unsigned int id,char message){
  * Function to send and receive data to and from PIC32 using SPI
  *****************************************************************************/
 void spiSendData(char* txBuffer, size_t bufferLength){
-	int i = 0;
 	unsigned int txCount = 0;
-	unsigned char c;
 	
 	SPI.beginTransaction(SPISettings(500000, MSBFIRST, SPI_MODE0));
 	
 	digitalWrite(SS_PIN,LOW);
 	for(txCount = 0;txCount < bufferLength;txCount++)//send whole buffer
 	{		
-		c = SPI.transfer(txBuffer[txCount]);//transfer and receive 1 char in SPI
+		SPI.transfer(txBuffer[txCount]);//transfer and receive 1 char in SPI
 		delayMicroseconds(40);
 	}
 	digitalWrite(SS_PIN,HIGH);
@@ -1151,6 +1185,7 @@ bool pollRx(char* buffer)
 	
 	SPI.endTransaction();
 	delay(5);	
+	return false;
 }
 
 void resetBuffer(char* buffer,unsigned int length)
@@ -1173,12 +1208,12 @@ void convertFloatToString(char* destination,float value, int decPlace){//convert
 	{
 		value = value * -1;
 		convertedInt = value* power10[decPlace];
-		sprintf(destination,"-%lu|%d\0",convertedInt,decPlace);		
+		sprintf(destination,"-%lu|%d",convertedInt,decPlace);		
 	}
 	else
 	{
 		convertedInt = value* power10[decPlace];
-		sprintf(destination,"%lu|%d\0",convertedInt,decPlace);
+		sprintf(destination,"%lu|%d",convertedInt,decPlace);
 	}
 
 	
