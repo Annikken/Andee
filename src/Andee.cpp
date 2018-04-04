@@ -38,9 +38,7 @@ void AndeeClass::begin(){
 		SPI.begin(SS_PIN);
 		SPI.setClockDivider(SS_PIN, 21);
 	#else		
-		SPI.begin();
-		//pinMode(SCK, OUTPUT);
-		//pinMode(MOSI, OUTPUT);	
+		SPI.begin();	
 	#endif 	
 	
 	delay(800);
