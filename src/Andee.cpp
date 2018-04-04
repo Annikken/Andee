@@ -33,11 +33,16 @@ AndeeClass Andee;
 
 void AndeeClass::begin(){
 	pinMode(SS_PIN,OUTPUT);
-	digitalWrite(SS_PIN,HIGH);	
+	digitalWrite(SS_PIN,HIGH);
+	#if defined(__SAM3X8E__)
+		SPI.begin(SS_PIN);
+		SPI.setClockDivider(SS_PIN, 21);
+	#else		
+		SPI.begin();
+		//pinMode(SCK, OUTPUT);
+		//pinMode(MOSI, OUTPUT);	
+	#endif 	
 	
-	SPI.begin();
-	pinMode(SCK, OUTPUT);
-    pinMode(MOSI, OUTPUT);
 	delay(800);
 	
 	memset(rxBuffer,0x00,RX_MAX);	
