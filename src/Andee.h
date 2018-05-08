@@ -138,6 +138,14 @@ class AndeeClass
 	
 	void textInput();
 	//Call this to use the voice to text function of the Apple Watch
+	
+///////////////////////////AIO////////////////////////////////
+
+	void pinMode(char,uint8_t);
+	
+	void digitalWrite(char,uint8_t);
+	
+	int digitalRead(char);
 };
 extern AndeeClass Andee;
 ///////////////////////////////////

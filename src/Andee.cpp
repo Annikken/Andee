@@ -459,7 +459,21 @@ void AndeeClass::textInput(){
 	andeeCommand = TEXT_INPUT;
 	sendAndee(99,EMPTY);
 }
+///////////////////////////////////////////AIO///////////////////////////////////////
+void AndeeClass::pinMode(char pin,uint8_t mode)
+{
+	
+}
 
+void AndeeClass::digitalWrite(char pin,uint8_t mode)
+{
+	
+}
+
+int AndeeClass::digitalRead(char pin)
+{
+	
+}
 
 /*****************************************************************************
 ****************************ANDEEHELPER CLASS*********************************
