@@ -49,7 +49,6 @@ void setup()
   Andee.begin();  // Setup communication between Annikken Andee and Arduino
   Andee.clear();  // Clear the screen of any previous displays  
   setInitialData(); // Define object types and their appearance
-
   for(int i = 0; i<8;i++)
   {
     Andee.AIO_pinMode(i,INPUT);
@@ -112,36 +111,37 @@ void setInitialData()
 void loop() {
   
   value0 = Andee.AIO_digitalRead(0);
-  value1 = Andee.AIO_digitalRead(1);
-  value2 = Andee.AIO_digitalRead(2);
-  value3 = Andee.AIO_digitalRead(3);
-  value4 = Andee.AIO_digitalRead(4);
-  value5 = Andee.AIO_digitalRead(5);
-  value6 = Andee.AIO_digitalRead(6);
-  value7 = Andee.AIO_digitalRead(7);  
-//each IO is read and stored to its respective variable
-  
+  //each IO is read and stored to its respective variable  
   disp0.setData(value0);
-  disp1.setData(value1);
-  disp2.setData(value2);
-  disp3.setData(value3);
-  disp4.setData(value4);
-  disp5.setData(value5);
-  disp6.setData(value6);
-  disp7.setData(value7);
-//Once the value is stored, setData is set to display the value on the UI
-  
+  //Once the value is stored, setData is set to display the value on the UI  
   disp0.update();
+  // Call updates to all UI objects or else the object will not appear on the smart device
+  
+  value1 = Andee.AIO_digitalRead(1);
+  disp1.setData(value1);
   disp1.update();
+  
+  value2 = Andee.AIO_digitalRead(2);
+  disp2.setData(value2);
   disp2.update();
+  
+  value3 = Andee.AIO_digitalRead(3);
+  disp3.setData(value3);
   disp3.update();
+  
+  value4 = Andee.AIO_digitalRead(4);
+  disp4.setData(value4);
   disp4.update();
+  
+  value5 = Andee.AIO_digitalRead(5);
+  disp5.setData(value5);
   disp5.update();
+  
+  value6 = Andee.AIO_digitalRead(6);
+  disp6.setData(value6);
   disp6.update();
+  
+  value7 = Andee.AIO_digitalRead(7);  
+  disp7.setData(value7);
   disp7.update();
-// Call updates to all UI objects or else the object will not appear on the smart device
-  
-  delay(300);
-// A short delay is necessary to give Andee time to communicate with the smart device
-  
 }

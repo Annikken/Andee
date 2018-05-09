@@ -467,7 +467,7 @@ void AndeeClass::AIO_pinMode(char pin,uint8_t mode)
 		andeeCommand = AIO_PIN_MODE;
 		char temp[5];
 		memset(temp,0x00,5);
-		sprintf(temp,"%c,%c\0",pin+32,mode+32);
+		sprintf(temp,"%c,%c\0",pin+48,mode+32);
 		sendAndee(99,temp);
 	}
 }
@@ -479,25 +479,29 @@ void AndeeClass::AIO_digitalWrite(char pin,uint8_t mode)
 		andeeCommand = AIO_DIGITAL_WRITE;
 		char temp[5];
 		memset(temp,0x00,5);
-		sprintf(temp,"%c,%c\0",pin+32,mode+32);
+		sprintf(temp,"%c,%c\0",pin+48,mode+32);
 		sendAndee(99,temp);
 	}
 }
 
 int AndeeClass::AIO_digitalRead(char pin)
 {
+	int pinRead = 0;
 	if(pin>=0 || pin<=7)
 	{
 		andeeCommand = AIO_DIGITAL_READ;
-		sendByteAndee(99,pin+32);
+		sendByteAndee(99,pin+48);		
+		
+		if(pollRx(rxBuffer))
+		{
+			pinRead = (rxBuffer[0] - 48);
+			if(pinRead >= 0 || pinRead <= 1)
+			{
+				return pinRead;
+			}			
+		}
 	}
 	
-	if(pollRx(rxBuffer))
-	{
-		Serial.print("\r\naioRead:");Serial.println(rxBuffer);
-	}
-	
-	return 0;
 }
 
 /*****************************************************************************
@@ -1174,7 +1178,7 @@ void spiSendData(char* txBuffer, size_t bufferLength){
 	digitalWrite(SS_PIN,HIGH);
 	
 	SPI.endTransaction();
-	delay(5);
+	delay(10);
 }
 
 bool pollRx(char* buffer)
@@ -1226,7 +1230,7 @@ bool pollRx(char* buffer)
 	digitalWrite(SS_PIN,HIGH);
 	
 	SPI.endTransaction();
-	delay(5);	
+	delay(10);	
 	return false;
 }
 
