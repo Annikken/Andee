@@ -460,19 +460,44 @@ void AndeeClass::textInput(){
 	sendAndee(99,EMPTY);
 }
 ///////////////////////////////////////////AIO///////////////////////////////////////
-void AndeeClass::pinMode(char pin,uint8_t mode)
+void AndeeClass::AIO_pinMode(char pin,uint8_t mode)
 {
-	
+	if(pin>=0 || pin<=7)
+	{
+		andeeCommand = AIO_PIN_MODE;
+		char temp[5];
+		memset(temp,0x00,5);
+		sprintf(temp,"%c,%c\0",pin+32,mode+32);
+		sendAndee(99,temp);
+	}
 }
 
-void AndeeClass::digitalWrite(char pin,uint8_t mode)
+void AndeeClass::AIO_digitalWrite(char pin,uint8_t mode)
 {
-	
+	if(pin>=0 || pin<=7)
+	{
+		andeeCommand = AIO_DIGITAL_WRITE;
+		char temp[5];
+		memset(temp,0x00,5);
+		sprintf(temp,"%c,%c\0",pin+32,mode+32);
+		sendAndee(99,temp);
+	}
 }
 
-int AndeeClass::digitalRead(char pin)
+int AndeeClass::AIO_digitalRead(char pin)
 {
+	if(pin>=0 || pin<=7)
+	{
+		andeeCommand = AIO_DIGITAL_READ;
+		sendByteAndee(99,pin+32);
+	}
 	
+	if(pollRx(rxBuffer))
+	{
+		Serial.print("\r\naioRead:");Serial.println(rxBuffer);
+	}
+	
+	return 0;
 }
 
 /*****************************************************************************

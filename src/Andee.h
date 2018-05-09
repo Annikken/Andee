@@ -140,12 +140,18 @@ class AndeeClass
 	//Call this to use the voice to text function of the Apple Watch
 	
 ///////////////////////////AIO////////////////////////////////
+//AIO are a set of 8 pins located on the Annikken Andee U and Android boards that allow users to set a digital output or input. It expands the number of pins so users can fit more function into their projects. 
 
-	void pinMode(char,uint8_t);
+//Pin range is from 0 to 7
+
+	void AIO_pinMode(char,uint8_t);
+	// Set AIO pin mode. Modes available are OUTPUT and INPUT
 	
-	void digitalWrite(char,uint8_t);
+	void AIO_digitalWrite(char,uint8_t);
+	// Write `HIGH` or `LOW` to AIO pins
 	
-	int digitalRead(char);
+	int AIO_digitalRead(char);
+	//Read AIO pin. Returns `HIGH` or `LOW`
 };
 extern AndeeClass Andee;
 ///////////////////////////////////
