@@ -17,6 +17,8 @@ Author: Hasif
 #include <SPI.h>
 #include <Andee.h>
 
+#define RX_DELAY 200
+
 unsigned int SS_PIN = 8;
 
 char txBuffer[TX_MAX];
@@ -1113,14 +1115,14 @@ int AndeeHelper::isPressed(){
 
 void AndeeHelper::ack(){
 	andeeCommand = ACKNOWLEDGE;
-	delay(50);
+	//delay(50);
 	sendAndee(id,EMPTY);
 }
 
 
 void AndeeHelper::update(){
 	update(0);
-	delay(50);
+	//delay(50);
 }
 void AndeeHelper::update(unsigned int loop){
 	andeeCommand = UPDATE;
@@ -1140,7 +1142,7 @@ void AndeeHelper::update(unsigned int loop){
 void AndeeHelper::remove(){
 	andeeCommand = REMOVE;
 	sendAndee(id,EMPTY);
-	delay(50);
+	//delay(50);
 }
 
 
@@ -1152,12 +1154,14 @@ void sendAndee(unsigned int id,char* message){
 	sprintf(txBuffer,"#%d#%d#%s;",id,andeeCommand,message);	
 	
 	spiSendData( txBuffer,strlen(txBuffer) );	
+	delay(50);
 }
 void sendByteAndee(unsigned int id,char message){
 	memset(txBuffer,0x00,TX_MAX);
 	sprintf(txBuffer,"#%d#%d#%c;",id,andeeCommand,message);
 	
 	spiSendData( txBuffer,strlen(txBuffer) );	
+	delay(50);
 }
 
 
@@ -1167,7 +1171,7 @@ void sendByteAndee(unsigned int id,char message){
 void spiSendData(char* txBuffer, size_t bufferLength){
 	unsigned int txCount = 0;
 	
-	SPI.beginTransaction(SPISettings(500000, MSBFIRST, SPI_MODE0));
+	SPI.beginTransaction(SPISettings(1500000, MSBFIRST, SPI_MODE0));
 	
 	digitalWrite(SS_PIN,LOW);
 	for(txCount = 0;txCount < bufferLength;txCount++)//send whole buffer
@@ -1187,7 +1191,7 @@ bool pollRx(char* buffer)
 	unsigned char tempChar;	
 	resetRX();
 	
-	SPI.beginTransaction(SPISettings(500000, MSBFIRST, SPI_MODE0));
+	SPI.beginTransaction(SPISettings(1500000, MSBFIRST, SPI_MODE0));
 	
 	digitalWrite(SS_PIN,LOW);	
 	for(int i = 0;i<RX_DELAY;)
@@ -1197,7 +1201,7 @@ bool pollRx(char* buffer)
 		{				
 			if(tempChar == ';' || tempChar == ']')
 			{
-				//Serial.print("pollRx:");Serial.println(buffer);
+				Serial.print("pollRx:");Serial.println(buffer);
 				buffer[rxCount] = '\0';
 				
 				digitalWrite(SS_PIN,HIGH);
@@ -1209,7 +1213,7 @@ bool pollRx(char* buffer)
 			}
 			else if(tempChar == 173)
 			{
-				//Serial.println("pollRx: No Reply");
+				Serial.println("pollRx: No Reply");
 				digitalWrite(SS_PIN,HIGH);
 				SPI.endTransaction();
 				
