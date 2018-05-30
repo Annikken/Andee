@@ -17,6 +17,8 @@ Author: Hasif
 #include <SPI.h>
 #include <Andee.h>
 
+#define RX_DELAY 200
+
 unsigned int SS_PIN = 8;
 
 char txBuffer[TX_MAX];
