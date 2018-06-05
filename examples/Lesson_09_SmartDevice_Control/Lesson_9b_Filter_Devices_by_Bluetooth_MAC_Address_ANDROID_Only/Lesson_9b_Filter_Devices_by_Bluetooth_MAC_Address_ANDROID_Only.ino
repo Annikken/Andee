@@ -3,13 +3,13 @@
   ================
   Lesson 9b
   Filter Devices by Bluetooth MAC Address
-  
-  Check out our Resources section for more information and 
-  ideas on what you can do with the Annikken Andee!
-  http://resources.annikken.com
 
-  Contact us at andee@annikken.com if there are 
-  bugs in this sketch or if you need help with the 
+  Check out our Resources section for more information and
+  ideas on what you can do with the Annikken Andee!
+  https://annikken.gitbooks.io/annikken-andee/content/
+  
+  Contact us at andee@annikken.com if there are
+  bugs in this sketch or if you need help with the
   Annikken Andee
 ************************************************************/
 
@@ -23,16 +23,16 @@ AndeeHelper displaybox;
 
 // This list will contain all the authorised MAC addresses
 char *authorisedList[] = { "00:11:22:33:44:55",
-                         "aa:bb:cc:dd:ee:ff", 
-                         "aa:11:bb:22:cc:33" };  // Don't forget to add yours!
+                           "aa:bb:cc:dd:ee:ff",
+                           "aa:11:bb:22:cc:33"
+                         };  // Don't forget to add yours!
 int noOfAuthorisedUsers = 3;
 
-char strBuffer[30]; // String to store the retrieved Bluetooth info
-char current_mac_id[18]; // String to store the extracted MAC address
+const char* MACAddress;//Used to store the MAC address
 bool authorised; // Flag to check if user is authorised or not
 
 
-// The setup() function is meant to tell Arduino what to do 
+// The setup() function is meant to tell Arduino what to do
 // only when it starts up.
 void setup()
 {
@@ -48,52 +48,47 @@ void setInitialData()
 {
   displaybox.setId(0);
   displaybox.setType(DATA_OUT);
-  displaybox.setLocation(0,0,FULL);
+  displaybox.setLocation(0, 0, FULL);
   displaybox.setTitle("Connected MAC Address");
 }
 
 // Arduino will run instructions here repeatedly until you power it off.
 void loop()
 {
-  if( Andee.isConnected() ) // When user presses the send button on phone
+  if ( Andee.isConnected() ) // When user presses the send button on phone
   {
-     // Send command to the Andee to get some Bluetooth device information
-     // and store it in the string buffer
-     Andee.sendCommand("GET CONNECTED MAC_ID", strBuffer);
-    
-     // As the retrieved information contains more than just the MAC address,
-     // we'll need to extract the MAC address and store it in another string
-     strncpy(current_mac_id, strBuffer, 17); // Extract MAC address
-     
-     for(int i = 0; i < noOfAuthorisedUsers; i++)
-     {
-       if( strcmp(current_mac_id, authorisedList[i]) == 0 )
-       {
-         authorised = true; // Mark flag as true if connected device is in authorised list
-       }
-     }
-     
-     if(authorised == true) // If user is authorised
-     {
-       // This is where you'll show the authorised user the controls that you want to show
-       displaybox.setData("You are authorised!"); 
-       displaybox.update();    
-     }
-     else // If intruder
-     {
-       // Show a message before you disconnect the intruder
-       displaybox.setData("Intruder! You will be disconnected!"); 
-       displaybox.update();             
-       delay(2000); // Give intruder time to read the message
-       Andee.disconnect(); // Disconnect intruder
-     }
+    // Get MAC Address and store it in a char*
+    MACAddress = Andee.getMACAddress();
+
+    for (int i = 0; i < noOfAuthorisedUsers; i++)
+    {
+      if ( strcmp(MACAddress, authorisedList[i]) == 0 )
+      {
+        authorised = true; // Mark flag as true if connected device is in authorised list
+      }
+    }
+
+    if (authorised == true) // If user is authorised
+    {
+      // This is where you'll show the authorised user the controls that you want to show
+      displaybox.setData("You are authorised!");
+      displaybox.update();
+    }
+    else // If intruder
+    {
+      // Show a message before you disconnect the intruder
+      displaybox.setData("Intruder! You will be disconnected!");
+      displaybox.update();
+      delay(2000); // Give intruder time to read the message
+      Andee.disconnect(); // Disconnect intruder
+    }
 
   }
   else // If not connected
   {
     authorised = false; // Reset flag to false when authorised users disconnect
   }
-  
+
   delay(500); // Always leave a short delay for Bluetooth communication
 }
 

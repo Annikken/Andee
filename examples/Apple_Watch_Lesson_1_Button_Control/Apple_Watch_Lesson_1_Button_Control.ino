@@ -13,7 +13,7 @@
  
  Check out our Resources section for more information and 
  ideas on what you can do with the Annikken Andee!
- http://resources.annikken.com
+ https://annikken.gitbooks.io/annikken-andee/content/
   
  Contact us at andee@annikken.com if there are 
  bugs in this sketch or if you need help with the 

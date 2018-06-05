@@ -6,7 +6,7 @@
   
   Check out our Resources section for more information and 
   ideas on what you can do with the Annikken Andee!
-  http://resources.annikken.com
+  https://annikken.gitbooks.io/annikken-andee/content/
 
   Contact us at andee@annikken.com if there are 
   bugs in this sketch or if you need help with the 
@@ -21,8 +21,7 @@
 // We'll use a display box to show the current MAC address
 AndeeHelper displaybox;
 
-char strBuffer[30]; // String to store the retrieved Bluetooth info
-char current_mac_id[18]; // String to store the extracted MAC address
+const char* MACAddress;//Used to store the MAC address
 
 // The setup() function is meant to tell Arduino what to do 
 // only when it starts up.
@@ -48,15 +47,11 @@ void loop()
 {
   if( Andee.isConnected() ) // Do this only when Andee is connected
   {
-    // Send command to the Andee to get some Bluetooth device information
-    // and store it in the string buffer
-    Andee.sendCommand("GET CONNECTED MAC_ID", strBuffer);
-    
-    // As the retrieved information contains more than just the MAC address,
-    // we'll need to extract the MAC address and store it in another string
-    strncpy(current_mac_id, strBuffer, 17); // Extract MAC address
-    
-    displaybox.setData(current_mac_id);
+    // Get MAC Address and store it in a char*
+    MACAddress = Andee.getMACAddress();  
+
+    //Display MAC Adress in a display box
+    displaybox.setData(MACAddress);
     displaybox.update();
   }
   
