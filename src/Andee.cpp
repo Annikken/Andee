@@ -17,8 +17,6 @@ Author: Hasif
 #include <SPI.h>
 #include <Andee.h>
 
-#define RX_DELAY 200
-
 unsigned int SS_PIN = 8;
 
 char txBuffer[TX_MAX];
@@ -75,9 +73,23 @@ void AndeeClass::setName(const char* name){
 	delay(100);	
 }
 
-void AndeeClass::getMACAddress(){
+const char* AndeeClass::getMACAddress(){
 	andeeCommand = GET_MAC_ADDRESS;
 	sendAndee(99,EMPTY);
+	
+	if(pollRx(rxBuffer))
+	{
+		if(rxBuffer[1] > 0x2F)
+		{			
+			Serial.print("MAC:");Serial.println(rxBuffer);
+			return rxBuffer;
+		}
+		
+	}
+	else
+	{
+		return "No Mac Found";
+	}
 }
 
 signed char AndeeClass::getRSSI(){
@@ -92,12 +104,12 @@ signed char AndeeClass::getRSSI(){
 		}
 		else
 		{
-			return -127;
+			return 69;
 		}
 	}
 	else
 	{
-		return -127;
+		return 70;
 	}
 }
 
@@ -340,7 +352,7 @@ void AndeeClass::sendSMS(char* number,char* message){
 	char temp[90];
 	char limit[65];
 	
-	if(strlen(message) > 64)
+	if(strlen(message) >= 64)
 	{
 		memcpy(limit,message,64);	
 		limit[64] = '\0';
@@ -367,10 +379,10 @@ void AndeeClass::takePhoto(char cameraType, char autoFocus, char flash){
 
 void AndeeClass::textToSpeech(char* speech, float speed, float pitch, char accent ){
 	andeeCommand = TEXT_TO_SPEECH;	
-	char temp[100];
+	char temp[90];
 	char limit[65];
 	
-	if(strlen(speech) > 64)
+	if(strlen(speech) >= 64)
 	{
 		memcpy(limit,speech,64);
 		limit[64] = '\0';
@@ -391,10 +403,10 @@ void AndeeClass::textToSpeech(char* speech, float speed, float pitch, char accen
 
 void AndeeClass::notification(char* title,char* message, char* ticker){
 	andeeCommand = NOTIFICATION;
-	char temp[102];
-	char titleLimit[33];
-	char msgLimit[33];
-	char tickerLimit[33];
+	char temp[90];
+	char titleLimit[31];
+	char msgLimit[41];
+	char tickerLimit[16];
 	unsigned int titleLen;
 	unsigned int msgLen;
 	unsigned int tickerLen;
@@ -403,10 +415,10 @@ void AndeeClass::notification(char* title,char* message, char* ticker){
 	msgLen = strlen(message);
 	tickerLen = strlen(ticker);
 
-	if(titleLen > 32)
+	if(titleLen >= 30)
 	{
-		memcpy(titleLimit,title,32);
-		titleLimit[32] = '\0';
+		memcpy(titleLimit,title,30);
+		titleLimit[30] = '\0';
 	}
 	else
 	{
@@ -414,10 +426,10 @@ void AndeeClass::notification(char* title,char* message, char* ticker){
 		titleLimit[titleLen] = '\0';
 	}
 	
-	if(msgLen > 32)
+	if(msgLen >= 40)
 	{
-		memcpy(msgLimit,message,32);
-		msgLimit[32] = '\0';
+		memcpy(msgLimit,message,40);
+		msgLimit[40] = '\0';
 	}
 	else
 	{
@@ -425,10 +437,10 @@ void AndeeClass::notification(char* title,char* message, char* ticker){
 		msgLimit[msgLen] = '\0';
 	}
 	
-	if(tickerLen > 32)
+	if(tickerLen >= 15)
 	{
-		memcpy(tickerLimit,ticker,32);
-		tickerLimit[32] = '\0';
+		memcpy(tickerLimit,ticker,15);
+		tickerLimit[15] = '\0';
 	}
 	else
 	{
@@ -436,7 +448,7 @@ void AndeeClass::notification(char* title,char* message, char* ticker){
 		tickerLimit[tickerLen] = '\0';
 	}	
 	
-	memset(temp,0x00,200);
+	memset(temp,0x00,90);
 	sprintf(temp,"%s,%s,%s",titleLimit,msgLimit,tickerLimit);
 	
 	sendAndee(99,temp);
@@ -469,7 +481,7 @@ void AndeeClass::AIO_pinMode(char pin,uint8_t mode)
 		andeeCommand = AIO_PIN_MODE;
 		char temp[5];
 		memset(temp,0x00,5);
-		sprintf(temp,"%c,%c\0",pin+48,mode+32);
+		sprintf(temp,"%c,%c",pin+48,mode+32);
 		sendAndee(99,temp);
 	}
 }
@@ -481,7 +493,7 @@ void AndeeClass::AIO_digitalWrite(char pin,uint8_t mode)
 		andeeCommand = AIO_DIGITAL_WRITE;
 		char temp[5];
 		memset(temp,0x00,5);
-		sprintf(temp,"%c,%c\0",pin+48,mode+32);
+		sprintf(temp,"%c,%c",pin+48,mode+32);
 		sendAndee(99,temp);
 	}
 }
@@ -502,6 +514,10 @@ int AndeeClass::AIO_digitalRead(char pin)
 				return pinRead;
 			}			
 		}
+	}
+	else
+	{
+		return 10;
 	}
 	
 }
@@ -1188,7 +1204,7 @@ bool pollRx(char* buffer)
 	unsigned int rxCount = 0;
 	unsigned char tempChar;	
 	resetRX();
-	
+	delay(3);	
 	SPI.beginTransaction(SPISettings(500000, MSBFIRST, SPI_MODE0));
 	
 	digitalWrite(SS_PIN,LOW);	
@@ -1232,7 +1248,7 @@ bool pollRx(char* buffer)
 	digitalWrite(SS_PIN,HIGH);
 	
 	SPI.endTransaction();
-	delay(10);	
+	delay(5);	
 	return false;
 }
 

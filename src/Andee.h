@@ -12,7 +12,7 @@ Author: Hasif
 #include "itoa.h"
 #endif
 
-#define RX_DELAY 15
+#define RX_DELAY 200
 #define RX_MAX 100
 #define TX_MAX 128
 
@@ -33,7 +33,7 @@ class AndeeClass
 	void setName(const char*);
 	//This function allows you to change the Andee name
 	
-	void getMACAddress();	
+	const char* getMACAddress();	
 	//Gets the MAC Address of the smartdevice connected to the Andee.(Android Only)
 	
 	signed char getRSSI();
