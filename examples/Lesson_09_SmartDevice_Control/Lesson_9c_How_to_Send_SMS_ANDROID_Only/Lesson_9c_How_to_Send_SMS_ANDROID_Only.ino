@@ -48,6 +48,8 @@ void loop()
   {
     sendMessage.ack(); // Acknowledge button press
     Andee.sendSMS("+6512341234", "Hello oo oo oo oo");
+    //Put in your recipient's phone number in the first argument above, 
+    //the text message in the second argument
   }
 
   sendMessage.update();

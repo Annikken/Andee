@@ -47,7 +47,9 @@ void loop()
   if( btnNotify.isPressed() ) // When user presses the send button on phone
   {
     btnNotify.ack(); // Acknowledge button press
-    Andee.notification("Notification Title", "Notification Message", "Text that appears at status bar when notification is pushed"); // Sends the SMS to the recipient
+    Andee.notification("Notification Title", "Notification Message", "Ticker Text"); 
+    //Sends the SMS to the recipient. 
+    //Text Limits - title:30 characters(char), message:40 char, ticker: 15 char 
   }
 
   btnNotify.update();

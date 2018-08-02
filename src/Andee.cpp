@@ -21,7 +21,6 @@ unsigned int SS_PIN = 8;
 
 char txBuffer[TX_MAX];
 char rxBuffer[RX_MAX];
-char rxCount = 0;
 
 char EMPTY[3] = {'N','A','\0'};
 AndeeClass Andee;
