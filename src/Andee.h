@@ -305,6 +305,11 @@ class AndeeHelper
 	//This function returns an acknowledgment to the smartphone/tablet that it has received the button press. This is to allow the button widget to refresh	
 	/////////////////////////////////////////////////////////////////////////////////////////////
 	
+	////////////////////////////////////////JOYSTICK UI////////////////////////////////////////////
+	void getJoystick(int*,int*);
+	//Use this function to retrieve the joystick values from the smartphone.
+	//Max and Min values can be determined using setYAxisMax & setXAxisMax
+	
 	//////////////////////////////////Update & Remove UI//////////////////////////////////////////
 	
 	void update(void);
@@ -425,6 +430,7 @@ enum//For All Andee Commands
 	GET_DATE_INPUT,
 	SET_DEFAULT_TIME,
 	GET_TIME_INPUT,
+	GET_JOYSTICK,
 
 	IS_PRESSED,
 	ACKNOWLEDGE,//65
@@ -458,6 +464,7 @@ enum//For All Andee Commands
 #define TIME_IN 'X'
 #define SLIDER_IN 'Q'
 #define WATCH 'W'
+#define JOYSTICK 'U'
 
 /*************************************************************
  *********       ORIENTATION MACROS      *********************
@@ -512,6 +519,12 @@ enum//For All Andee Commands
 #define NO_FINGER '2'
 #define ON_VALUE_CHANGE '1'
 #define ON_FINGER_UP '0'
+
+/*************************************************************
+ ****************      JOYSTICK MACROS      ********************
+ ************************************************************/ 
+#define setYAxisMax setData
+#define setXAxisMax	setUnit
 
 /*************************************************************
  **************      DATE/TIME INPUT MACROS      *************

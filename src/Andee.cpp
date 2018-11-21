@@ -1005,6 +1005,31 @@ bool AndeeHelper::getSliderValue(float* value,float type){
 	
 }
 
+void AndeeHelper::getJoystick(int* xAxis, int* yAxis){
+	andeeCommand = GET_JOYSTICK;
+	sendAndee(id,EMPTY);
+	
+	char tempX[5];
+	char tempY[5];
+	int i;
+	
+	if(pollRx(rxBuffer))
+	{
+		if(id == rxBuffer[0] - 32)
+		{
+			for(i = 0;i<4;i++)
+			{
+				tempX[i] = rxBuffer[i+2];
+				tempY[i] = rxBuffer[i+6];
+			}
+			tempX[4] = '\0';
+			tempY[4] = '\0';
+			*xAxis = atoi(tempX);
+			*yAxis = atoi(tempY);
+		}
+	}
+}
+
 void AndeeHelper::getKeyboardMessage(char* message){
 	andeeCommand = GET_KEYBOARD_MSG;
 	sendAndee(id,EMPTY);
