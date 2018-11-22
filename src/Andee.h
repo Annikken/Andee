@@ -430,7 +430,6 @@ enum//For All Andee Commands
 	GET_DATE_INPUT,
 	SET_DEFAULT_TIME,
 	GET_TIME_INPUT,
-	GET_JOYSTICK,
 
 	IS_PRESSED,
 	ACKNOWLEDGE,//65
@@ -438,6 +437,7 @@ enum//For All Andee Commands
 
 	UPDATE,
 	REMOVE,//68
+	GET_JOYSTICK,
 
 }andeeCommand;
 
