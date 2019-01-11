@@ -1005,7 +1005,7 @@ bool AndeeHelper::getSliderValue(float* value,float type){
 	
 }
 
-bool AndeeHelper::getJoystick(int* xAxis, int* yAxis){
+void AndeeHelper::getJoystick(int* xAxis, int* yAxis){
 	andeeCommand = GET_JOYSTICK;
 	sendAndee(id,EMPTY);
 	
@@ -1026,10 +1026,6 @@ bool AndeeHelper::getJoystick(int* xAxis, int* yAxis){
 			tempY[4] = '\0';
 			*xAxis = atoi(tempX);
 			*yAxis = atoi(tempY);
-			return true;
-		}
-		else{
-			return false;
 		}
 	}
 }
