@@ -39,7 +39,7 @@ float sliderTotal;
 // only when it starts up.
 void setup()
 {
-  sliderPosA = 128; // Just some arbitary values for demo purposes
+  sliderPosA = 128; // Just some arbitrary values for demo purposes
   sliderPosB = 50.0;
   sliderTotal = sliderPosA + sliderPosB;
   Andee.begin();  // Setup communication between Annikken Andee and Arduino
@@ -74,7 +74,7 @@ void setInitialData()
   sliderDiscrete.setSliderReportMode(ON_VALUE_CHANGE);
   // Set when you want the smartphone to update Arduino
   // Options available:
-  // - ON_VALUE_CHANGE : Updates Arduino everytime your finger moves the slider
+  // - ON_VALUE_CHANGE : Updates Arduino every time your finger moves the slider
   // - ON_FINGER_UP    : Updates Arduino only after you lift up your finger from the slider
   
   sliderDiscrete.setActiveColor(RED); // set the Slider active color and font color

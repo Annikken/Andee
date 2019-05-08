@@ -32,7 +32,7 @@ void setup()
   setInitialData(); // Define object types and their appearance
 }
 
-// This is the function meant to define the types and the apperance of
+// This is the function meant to define the types and the appearance of
 // all the objects on your smartphone
 void setInitialData()
 {
@@ -50,7 +50,7 @@ void loop()
     // Get MAC Address and store it in a char*
     MACAddress = Andee.getMACAddress();  
 
-    //Display MAC Adress in a display box
+    //Display MAC Address in a display box
     displaybox.setData(MACAddress);
     displaybox.update();
   }

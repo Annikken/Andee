@@ -34,7 +34,7 @@ void setup()
   setInitialData(); // Define object types and their appearance
 }
 
-// This is the function meant to define the types and the apperance of
+// This is the function meant to define the types and the appearance of
 // all the objects on your smartphone
 void setInitialData()
 {
@@ -50,8 +50,8 @@ void setInitialData()
   textInputButton.setKeyboardType(ALPHA_NUMERIC); 
   /* Sets the type of keyboard to show to the user
   Options available are:
-    - ALPHA_NUMERIC - Alpha-numeric keyboard.
-    - ALPHA_NUMERIC_PW - Alpha-numeric keyboard, input as password.
+    - ALPHA_NUMERIC - Alphanumeric keyboard.
+    - ALPHA_NUMERIC_PW - Alphanumeric keyboard, input as password.
     - NUMERIC - Android OS numeric keyboard.
     - NUMERIC_PW - Android OS numeric keyboard, input as password.    
   */
