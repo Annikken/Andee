@@ -252,7 +252,7 @@ void loop() {
         if(mode == CountDOWN)// if the timer is in count down mode
         {
           secCount--;        //decrease the seconds value
-          if(secCount == -1)//clocks dont display neg numbers so change it
+          if(secCount == -1)//clocks don't display neg numbers so change it
           {
             secCount = 59;
             minCount--;
@@ -274,10 +274,10 @@ void loop() {
           timeDisplay.update();
 
           secUP++;        //increase the seconds value by 1
-          if(secUP == 60)//again, clocks dont display 60
+          if(secUP == 60)//again, clocks don't display 60
           {
             secUP = 0;  //when seconds reach 60, reset value to 0
-            minUP++;    // and increas minutes by 1
+            minUP++;    // and increase minutes by 1
             sprintf(buffer2,"%02d:%02d",minUP,secUP);//display the time in units again
             timeDisplay.setUnit(buffer2);
             timeDisplay.update();

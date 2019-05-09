@@ -35,7 +35,7 @@ void setup()
   setInitialData(); // Define object types and their appearance
 }
 
-// This is the function meant to define the types and the apperance of
+// This is the function meant to define the types and the appearance of
 // all the objects on your smartphone
 void setInitialData()
 {
@@ -48,7 +48,7 @@ void setInitialData()
      Row: From 0 (top-most) to 3
      Col: From 0 (left-most) to 9. If there are too many objects on that row, you can
           scroll from left to right.
-     Size: The following sizes are available for you to chooose:
+     Size: The following sizes are available for you to choose:
      FULL, HALF, ONE_THIRD, ONE_QUART, TWO_THIRD, THREE_QUART */
   objectA.setTitle("Vibration");
   objectA.setData("This sketch is to test vibration on this device");  
@@ -61,7 +61,7 @@ void loop()
 
   Andee.vibrate();//Use this function to tell your connected device to vibrate  
   
-  delay(2000);//delay for 2 seconds so taht the vibration on the device occurs every 2 seconds
+  delay(2000);//delay for 2 seconds so that the vibration on the device occurs every 2 seconds
 }
 
 

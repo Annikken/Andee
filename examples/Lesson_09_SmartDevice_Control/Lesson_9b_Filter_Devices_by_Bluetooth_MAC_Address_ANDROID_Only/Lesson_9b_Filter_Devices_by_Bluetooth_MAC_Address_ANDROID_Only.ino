@@ -42,7 +42,7 @@ void setup()
   authorised = false;
 }
 
-// This is the function meant to define the types and the apperance of
+// This is the function meant to define the types and the appearance of
 // all the objects on your smartphone
 void setInitialData()
 {
