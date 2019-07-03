@@ -583,6 +583,7 @@ enum//For All Andee Commands
 #define WATCH_BUTTON2 47//79
 #define WATCH_BUTTON3 48//80
 #define WATCH_BUTTON4 49//81
+#define WATCH_BUTTON5 50//82
 
 #define WATCH_1BUTTON_A	0
 #define WATCH_2BUTTON_A	1
