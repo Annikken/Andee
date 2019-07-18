@@ -1236,18 +1236,25 @@ bool pollRx(char* buffer)
 	{
 		tempChar = SPI.transfer(0x00);
 		if(tempChar > 31)
-		{				
+		{
 			if(tempChar == ';' || tempChar == ']')
-			{
-				//Serial.print("pollRx:");Serial.println(buffer);
-				buffer[rxCount] = '\0';
-				
-				digitalWrite(SS_PIN,HIGH);
-				SPI.endTransaction();
-				
-				delay(5);
-				return true;			
-				break;
+			{				
+				if(rxCount <2)
+				{
+					buffer[rxCount++] = tempChar;
+				}
+				else
+				{
+					buffer[rxCount] = '\0';
+					//Serial.print("pollRx:");//Serial.println(buffer);				
+					
+					digitalWrite(SS_PIN,HIGH);
+					SPI.endTransaction();
+					
+					delay(5);
+					return true;			
+					break;
+				}
 			}
 			else if(tempChar == 173)
 			{
